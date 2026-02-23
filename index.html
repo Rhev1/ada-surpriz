@@ -3,221 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juno | Rhev1 Project</title>
+    <title>Juno Vault | Rhev1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; min-height: 100vh; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* 1. KUZEY IŞIKLARI */
+        /* Kuzey Işıkları */
         .aurora {
-            position: fixed; top: 0; left: 0; width: 100%; height: 50vh;
-            background: linear-gradient(to bottom, rgba(0, 255, 150, 0.1), rgba(0, 150, 255, 0.08), transparent);
+            position: fixed; top: 0; left: 0; width: 100%; height: 60vh;
+            background: linear-gradient(to bottom, rgba(0, 255, 150, 0.1), rgba(0, 150, 255, 0.05), transparent);
             filter: blur(100px); z-index: 1; pointer-events: none; animation: auroraFlow 15s infinite alternate linear;
         }
         @keyframes auroraFlow { 0% { opacity: 0.3; transform: scale(1); } 100% { opacity: 0.6; transform: scale(1.1); } }
 
-        /* 2. YILDIZLAR VE KAYAN YILDIZLAR */
-        #star-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        /* Yıldızlar */
+        #star-field { position: fixed; inset: 0; z-index: 0; }
         .star { position: absolute; background: white; border-radius: 50%; animation: blink infinite alternate ease-in-out; }
-        @keyframes blink { 0% { opacity: 0.2; } 100% { opacity: 1; } }
-        
-        .shooting-star {
-            position: absolute; width: 2px; height: 2px; background: #fff;
-            box-shadow: 0 0 10px #fff; animation: shoot 5s infinite; opacity: 0;
-        }
-        @keyframes shoot { 0% { transform: translate(0,0) rotate(-45deg) scale(0); opacity: 0; } 10% { opacity: 1; scale: 1; } 20% { transform: translate(-300px, 300px) rotate(-45deg) scale(0); opacity: 0; } 100% { opacity: 0; } }
+        @keyframes blink { 0% { opacity: 0.1; } 100% { opacity: 0.8; } }
 
-        /* GÖRSEL TASARIM */
-        .category-card { transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .category-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-5px); border-color: rgba(255,255,255,0.2); }
+        /* Konuşma Balonu (Karikatür Stili) */
+        .speech-bubble {
+            position: relative; background: #fff; color: #000; border-radius: 20px; padding: 10px 20px;
+            font-weight: bold; display: inline-block; margin-bottom: 20px; animation: bounce 2s infinite;
+        }
+        .speech-bubble:after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 0;
+            border: 15px solid transparent; border-top-color: #fff; border-bottom: 0;
+            border-left: 0; margin-left: -7.5px; margin-bottom: -15px;
+        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
-<body class="flex items-center justify-center relative">
+<body class="flex items-center justify-center">
 
     <div class="aurora"></div>
     <div id="star-field"></div>
 
-    <div id="start-screen" class="z-50 text-center space-y-6">
-        <div id="gif-trigger" class="cursor-pointer transition-transform hover:scale-110 active:scale-95">
-            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/__3yYXQkf9wAAAAM/kedi-bune.gif'" 
-                 class="w-48 h-48 rounded-full border-4 border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.1)] object-cover mx-auto">
-        </div>
-        <p class="text-xs tracking-[0.4em] text-white/30 uppercase animate-pulse">Devam etmek için tıkla</p>
-    </div>
-
-    <div id="auth-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl hidden items-center justify-center z-[100]">
-        <div class="glass p-10 rounded-[3rem] w-80 text-center">
-            <div id="ada-auth-text" class="hidden">
-                <h3 class="text-xl mb-4">Kart Bekleniyor</h3>
-                <p class="text-xs text-gray-400 mb-8">Lütfen Juno kartını telefona yaklaştırın.</p>
-                <button onclick="unlockAda()" class="w-full bg-white/10 py-3 rounded-2xl text-xs uppercase tracking-widest">Simüle Et (OKUTULDU)</button>
-            </div>
-            <div id="admin-auth-text" class="hidden">
-                <h3 class="text-xl mb-6">Sistem Kilidi</h3>
-                <input type="password" id="admin-pw" placeholder="Parola" class="w-full bg-white/5 border border-white/10 rounded-xl py-4 text-center mb-4 outline-none focus:border-white/30">
-                <button id="admin-login-btn" class="w-full bg-white text-black font-bold py-3 rounded-xl">YETKİLENDİR</button>
-            </div>
+    <div id="entry-layer" class="z-50 text-center">
+        <div class="speech-bubble text-sm">TIKLA!</div>
+        <div id="gif-main" class="cursor-pointer transition-transform hover:scale-110 active:scale-95">
+            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" 
+                 class="w-64 h-64 rounded-full border-8 border-white/5 shadow-2xl object-cover mx-auto">
         </div>
     </div>
 
-    <div id="ada-panel" class="hidden fixed inset-0 z-40 flex flex-col items-center justify-center p-6 text-center">
-        <div id="ada-waiting" class="space-y-8">
-            <p class="text-xs tracking-[0.5em] text-gray-500 uppercase">Süreyi Beklemelisin</p>
-            <div class="flex space-x-4 text-3xl md:text-6xl font-light" id="ada-timer">
-                <div><span id="ad-d">00</span><p class="text-[9px] mt-2 text-gray-600">GÜN</p></div>
-                <div><span id="ad-h">00</span><p class="text-[9px] mt-2 text-gray-600">SAAT</p></div>
-                <div><span id="ad-m">00</span><p class="text-[9px] mt-2 text-gray-600">DAK</p></div>
-                <div><span id="ad-s" class="text-white/40">00</span><p class="text-[9px] mt-2 text-gray-600">SN</p></div>
+    <div id="auth-modal" class="fixed inset-0 bg-black/95 backdrop-blur-3xl hidden items-center justify-center z-[100]">
+        <div class="glass p-10 rounded-[3rem] w-85 text-center border-white/10">
+            <div id="ada-auth" class="hidden">
+                <h3 class="text-xl font-semibold mb-2">Erişim Engellendi</h3>
+                <p class="text-gray-400 text-sm mb-8 italic">"Ada'nın fiziksel kartı olması gerek..."</p>
+                <button onclick="simulateNFC()" class="w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-gray-200 transition-all">KARTI OKUT</button>
             </div>
-        </div>
-        <button id="congrats-btn" class="hidden bg-white text-black px-12 py-5 rounded-full font-bold text-xl shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">TEBRİKLER, TIKLA!</button>
-    </div>
-
-    <div id="final-content" class="hidden fixed inset-0 z-[60] overflow-y-auto bg-black p-6 md:p-20">
-        <div class="max-w-5xl mx-auto space-y-12">
-            <header class="flex justify-between items-end border-b border-white/10 pb-8">
-                <div>
-                    <h2 class="text-4xl font-semibold">Senin İçin Hazırlandı</h2>
-                    <p class="text-gray-500 text-sm mt-2">Her anı, her kare özel.</p>
-                </div>
-                <button onclick="location.reload()" class="text-[10px] tracking-widest text-gray-500 uppercase">Geri Dön</button>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="category-card glass p-8 rounded-[2rem]">
-                    <div class="text-2xl mb-4">📸</div>
-                    <h4 class="font-bold">Fotoğraflar</h4>
-                    <p class="text-xs text-gray-500 mt-2">Bize dair en güzel kareler.</p>
-                </div>
-                <div class="category-card glass p-8 rounded-[2rem]">
-                    <div class="text-2xl mb-4">🎥</div>
-                    <h4 class="font-bold">Videolar</h4>
-                    <p class="text-xs text-gray-500 mt-2">Hareketli anılarımız.</p>
-                </div>
-                <div class="category-card glass p-8 rounded-[2rem]">
-                    <div class="text-2xl mb-4">🎵</div>
-                    <h4 class="font-bold">Ses Kayıtları</h4>
-                    <p class="text-xs text-gray-400 mt-2">Sadece senin duyman gerekenler.</p>
-                </div>
-                <div class="category-card glass p-8 rounded-[2rem]">
-                    <div class="text-2xl mb-4">📄</div>
-                    <h4 class="font-bold">Notlar</h4>
-                    <p class="text-xs text-gray-400 mt-2">Yazıya dökülmüş duygular.</p>
-                </div>
-            </div>
-            
-            <div id="media-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-                </div>
-        </div>
-    </div>
-
-    <div id="admin-panel" class="hidden fixed inset-0 z-[80] bg-[#050505] p-6 flex">
-        <div class="w-72 border-r border-white/5 p-6 flex flex-col justify-between">
-            <div class="space-y-8">
-                <h3 class="text-xs tracking-widest text-gray-500 uppercase">Patron Paneli</h3>
-                <div class="glass p-6 rounded-2xl">
-                    <p class="text-[10px] text-gray-500 uppercase mb-2">Ada Giriş Sayısı</p>
-                    <span id="visit-count" class="text-4xl font-light">0</span>
-                </div>
-                <div class="glass p-6 rounded-2xl">
-                    <p class="text-[10px] text-gray-500 uppercase mb-2">Sistem Saati</p>
-                    <span id="current-time" class="text-xl font-mono text-green-400">00:00:00</span>
-                </div>
-            </div>
-            <button onclick="showFinalContent()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-blue-500 transition-all">Sitenin Son Halini Gör</button>
-        </div>
-        <div class="flex-1 p-10 overflow-y-auto">
-            <h2 class="text-3xl mb-8">Hoş Geldin Patron</h2>
-            <div class="glass p-10 rounded-[3rem] border-white/10 italic text-gray-400">
-                "Buradan sistemdeki tüm medyaları yönetebilir, Ada'nın siteye kaç kere girdiğini sol taraftan takip edebilirsin."
+            <div id="admin-auth" class="hidden">
+                <h3 class="text-xl mb-6">Yönetici Girişi</h3>
+                <input type="password" id="admin-pw" placeholder="Parola" class="w-full bg-white/5 border border-white/10 rounded-xl py-4 text-center mb-4 outline-none text-white focus:border-white/40">
+                <button id="admin-btn" class="w-full bg-white text-black font-bold py-3 rounded-xl">SİSTEMİ AÇ</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // 1. ARKA PLAN EFEKTLERİ
-        const starField = document.getElementById('star-field');
-        for (let i = 0; i < 150; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 2;
-            s.style.cssText = `width:${size}px; height:${size}px; top:${Math.random()*100}%; left:${Math.random()*100}%; animation-duration:${Math.random()*3+2}s`;
-            starField.appendChild(s);
-        }
-        setInterval(() => {
-            const ss = document.createElement('div');
-            ss.className = 'shooting-star';
-            ss.style.top = Math.random() * 50 + '%'; ss.style.left = Math.random() * 100 + '%';
-            starField.appendChild(ss);
-            setTimeout(() => ss.remove(), 5000);
-        }, 8000);
+    <div id="waiting-room" class="hidden fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 p-6 text-center">
+        <h2 class="text-2xl font-light mb-4 text-white/80">Daha beklemen gerek...</h2>
+        <div class="flex space-x-6 text-4xl md:text-7xl font-semibold mb-12" id="timer-display">
+            <div><span id="d">00</span><p class="text-[10px] text-gray-500 uppercase mt-2">Gün</p></div>
+            <div><span id="h">00</span><p class="text-[10px] text-gray-500 uppercase mt-2">Saat</p></div>
+            <div><span id="m">00</span><p class="text-[10px] text-gray-500 uppercase mt-2">Dak</p></div>
+            <div><span id="s" class="text-green-500">00</span><p class="text-[10px] text-gray-500 uppercase mt-2">Sn</p></div>
+        </div>
+        <div id="congrats-area" class="hidden">
+            <h1 class="text-5xl font-bold mb-8 animate-bounce">TEBRİKLER! 🎉</h1>
+            <button onclick="openTheVault()" class="bg-gradient-to-r from-green-400 to-blue-500 px-10 py-4 rounded-full font-bold text-lg shadow-2xl">ANILARI GÖR</button>
+        </div>
+    </div>
 
-        // 2. SİSTEM MANTIĞI
-        const params = new URLSearchParams(window.location.search);
-        const role = params.get('role');
-        const targetDate = new Date("May 20, 2026 00:00:00").getTime();
+    <div id="the-vault" class="hidden fixed inset-0 z-[70] overflow-y-auto bg-[#020202] p-6 md:p-20">
+        <div class="max-w-5xl mx-auto space-y-16">
+            <div class="text-center">
+                <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600">Juno Arşivi</h2>
+                <p class="text-gray-500 mt-4">Sadece sana özel, bizim dünyamız.</p>
+            </div>
 
-        // Ziyaretçi Sayacı
-        if(role === 'ada') {
-            let v = localStorage.getItem('juno_v') || 0;
-            localStorage.setItem('juno_v', ++v);
-        }
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass p-10 rounded-[2.5rem] hover:bg-white/5 transition-all group">
+                    <span class="text-4xl">📸</span>
+                    <h3 class="text-2xl font-bold mt-4">Fotoğraflar</h3>
+                    <p class="text-gray-500 text-sm mt-2">En özel anlarımızın dondurulmuş halleri.</p>
+                    <div class="grid grid-cols-3 gap-2 mt-6 opacity-40 group-hover:opacity-100 transition-opacity" id="photo-grid"></div>
+                </div>
+                <div class="glass p-10 rounded-[2.5rem] hover:bg-white/5 transition-all">
+                    <span class="text-4xl">🎥</span>
+                    <h3 class="text-2xl font-bold mt-4">Videolar</h3>
+                    <p class="text-gray-500 text-sm mt-2">Zamanın akıp gittiği o güzel dakikalar.</p>
+                </div>
+                <div class="glass p-10 rounded-[2.5rem] hover:bg-white/5 transition-all">
+                    <span class="text-4xl">🎵</span>
+                    <h3 class="text-2xl font-bold mt-4">Ses Kayıtları</h3>
+                    <p class="text-gray-500 text-sm mt-2">Sadece senin için kaydedilmiş sesler.</p>
+                </div>
+                <div class="glass p-10 rounded-[2.5rem] hover:bg-white/5 transition-all">
+                    <span class="text-4xl">📄</span>
+                    <h3 class="text-2xl font-bold mt-4">Notlar</h3>
+                    <p class="text-gray-500 text-sm mt-2">Söylenememiş ama yazılmış cümleler.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // GIF TIKLAMA
-        document.getElementById('gif-trigger').onclick = () => {
-            document.getElementById('auth-modal').classList.replace('hidden', 'flex');
-            if(role === 'ada') document.getElementById('ada-auth-text').classList.remove('hidden');
-            else document.getElementById('admin-auth-text').classList.remove('hidden');
-        };
-
-        // ADA KİLİT AÇMA
-        function unlockAda() {
-            document.getElementById('auth-modal').style.display = 'none';
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('ada-panel').classList.remove('hidden');
-            startAdaTimer();
-        }
-
-        // ADMIN GİRİŞ
-        document.getElementById('admin-login-btn').onclick = () => {
-            if(document.getElementById('admin-pw').value === "ada seni çok seviyorum") {
-                document.getElementById('auth-modal').style.display = 'none';
-                document.getElementById('start-screen').style.display = 'none';
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('visit-count').innerText = localStorage.getItem('juno_v') || 0;
-                setInterval(() => {
-                    document.getElementById('current-time').innerText = new Date().toLocaleTimeString();
-                }, 1000);
-            } else { alert("Hatalı!"); }
-        };
-
-        // SÜRE BİTİNCE VEYA ADMİN ÖNİZLEME DEDİĞİNDE
-        function showFinalContent() {
-            document.getElementById('ada-panel').classList.add('hidden');
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('final-content').classList.remove('hidden');
-        }
-
-        document.getElementById('congrats-btn').onclick = showFinalContent;
-
-        // ADA SAYACI
-        function startAdaTimer() {
-            setInterval(() => {
-                const now = new Date().getTime();
-                const d = targetDate - now;
-                if(d > 0) {
-                    document.getElementById('ad-d').innerText = Math.floor(d / 86400000).toString().padStart(2, '0');
-                    document.getElementById('ad-h').innerText = Math.floor((d % 86400000) / 3600000).toString().padStart(2, '0');
-                    document.getElementById('ad-m').innerText = Math.floor((d % 3600000) / 60000).toString().padStart(2, '0');
-                    document.getElementById('ad-s').innerText = Math.floor((d % 60000) / 1000).toString().padStart(2, '0');
-                } else {
-                    document.getElementById('ada-waiting').classList.add('hidden');
-                    document.getElementById('congrats-btn').classList.remove('hidden');
-                }
-            }, 1000);
-        }
-    </script>
-</body>
-</html>
+    <div id="admin-panel" class="hidden fixed inset-0 z-[90] bg-black flex p-6">
+        <div class="w-80 border-r border-white/10 p-8 space-y-10">
+            <h2 class="text-xs tracking-[0.4em] text-green-500 font-bold uppercase">Patron Kontrol</h2>
+            <div class="
