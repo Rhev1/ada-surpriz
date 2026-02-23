@@ -114,4 +114,101 @@
     <div id="admin-panel" class="hidden fixed inset-0 z-[90] bg-black flex p-6">
         <div class="w-80 border-r border-white/10 p-8 space-y-10">
             <h2 class="text-xs tracking-[0.4em] text-green-500 font-bold uppercase">Patron Kontrol</h2>
-            <div class="
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[10px] text-gray-500 mb-2 uppercase">Ada Giriş Sayısı</p>
+                <span id="visit-stat" class="text-5xl font-light">0</span>
+            </div>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[10px] text-gray-500 mb-2 uppercase">Şu Anki Saat</p>
+                <span id="clock" class="text-2xl font-mono">00:00:00</span>
+            </div>
+            <button onclick="openTheVault()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold text-xs">SİTE ÖNİZLEME</button>
+        </div>
+        <div class="flex-1 flex items-center justify-center p-12 text-center">
+            <div class="max-w-md">
+                <h1 class="text-3xl mb-4 font-semibold">Hoş Geldin Patron</h1>
+                <p class="text-gray-500 italic text-sm">"Buradan Ada'nın ne kadar heyecanla beklediğini görebilirsin. Sol tarafta giriş sayıları mevcut."</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // YILDIZLAR
+        const sf = document.getElementById('star-field');
+        for(let i=0; i<150; i++){
+            let s = document.createElement('div');
+            s.className = 'star';
+            let size = Math.random()*2;
+            s.style.cssText = `width:${size}px; height:${size}px; top:${Math.random()*100}%; left:${Math.random()*100}%; animation-duration:${Math.random()*3+2}s`;
+            sf.appendChild(s);
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role');
+        const target = new Date("May 20, 2026 00:00:00").getTime();
+
+        // ANALİTİK
+        if(role === 'ada') {
+            let v = localStorage.getItem('ada_visits') || 0;
+            localStorage.setItem('ada_visits', ++v);
+        }
+
+        // GIF TIKLAMA
+        document.getElementById('gif-main').onclick = () => {
+            document.getElementById('auth-modal').classList.replace('hidden', 'flex');
+            if(role === 'ada') document.getElementById('ada-auth').classList.remove('hidden');
+            else document.getElementById('admin-auth').classList.remove('hidden');
+        };
+
+        // NFC SIMULE
+        function simulateNFC() {
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('entry-layer').style.display = 'none';
+            document.getElementById('waiting-room').classList.remove('hidden');
+            startTimer();
+        }
+
+        // ADMIN GİRİŞ (Şifre: ada seni çok seviyorum)
+        document.getElementById('admin-btn').onclick = () => {
+            if(document.getElementById('admin-pw').value === "ada seni çok seviyorum") {
+                document.getElementById('auth-modal').style.display = 'none';
+                document.getElementById('entry-layer').style.display = 'none';
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('visit-stat').innerText = localStorage.getItem('ada_visits') || 0;
+                setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+            } else { alert("Şifre Yanlış!"); }
+        };
+
+        // SAYAÇ FONKSİYONU
+        function startTimer() {
+            const timerInt = setInterval(() => {
+                const now = new Date().getTime();
+                const diff = target - now;
+                if(diff > 0) {
+                    document.getElementById('d').innerText = Math.floor(diff / 86400000).toString().padStart(2, '0');
+                    document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+                    document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                    document.getElementById('s').innerText = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+                } else {
+                    clearInterval(timerInt);
+                    document.getElementById('timer-display').classList.add('hidden');
+                    document.querySelector('#waiting-room h2').classList.add('hidden');
+                    document.getElementById('congrats-area').classList.remove('hidden');
+                }
+            }, 1000);
+        }
+
+        function openTheVault() {
+            document.getElementById('waiting-room').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('the-vault').classList.remove('hidden');
+            // Örnek 3 fotoğrafı otomatik bas
+            const grid = document.getElementById('photo-grid');
+            grid.innerHTML = '';
+            for(let i=1; i<=4; i++) {
+                grid.innerHTML += `<img src="medya/${i}.jpg" class="w-full aspect-square object-cover rounded-lg" onerror="this.style.display='none'">`;
+            }
+        }
+    </script>
+</body>
+</html>
