@@ -7,30 +7,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; overflow-x: hidden; margin: 0; }
+        body { background-color: #000000; color: #fff; font-family: 'Poppins', sans-serif; overflow-x: hidden; margin: 0; min-height: 100vh; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        /* Arkaplan Işık Efektleri (Boşluğu Doldurmak İçin) */
-        .ambient-light { position: fixed; border-radius: 50%; filter: blur(120px); z-index: 0; opacity: 0.4; animation: float 10s infinite alternate ease-in-out; pointer-events: none; }
-        .light-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: rgba(120, 0, 255, 0.15); }
-        .light-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: rgba(0, 150, 255, 0.1); animation-delay: -5s; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+        /* Arkaplan Yıldız Efektleri */
+        #stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .star { position: absolute; background-color: #ffffff; border-radius: 50%; animation: twinkle infinite alternate ease-in-out; }
+        @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); } }
 
+        /* Diğer Animasyonlar */
         #juno { transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; transform: translateY(150px) scale(0.5); }
         .juno-appear { opacity: 1 !important; transform: translateY(0) scale(1) !important; }
         .fade-in { animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Özel Scrollbar */
+        /* Özel Kaydırma Çubuğu (Scrollbar) */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center relative">
+<body class="flex flex-col items-center justify-start relative pt-20 pb-32">
 
-    <div class="ambient-light light-1"></div>
-    <div class="ambient-light light-2"></div>
+    <div id="stars-container"></div>
 
     <div id="custom-alert" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center z-50 fade-in">
         <div class="glass p-10 rounded-[2rem] max-w-sm w-full mx-4 text-center border-red-500/20 shadow-[0_0_50px_rgba(255,0,0,0.1)]">
@@ -38,16 +37,16 @@
                 <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
             <h3 class="text-xl font-semibold mb-2 text-gray-200">Erişim Bekleniyor</h3>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Sürprize ulaşmak veya panele girmek için lütfen Juno fiziksel kartınızı okutun.</p>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Sürprize ulaşmak için lütfen Juno fiziksel kartınızı okutun.</p>
             <button onclick="document.getElementById('custom-alert').classList.replace('flex', 'hidden'); document.getElementById('juno').style.display='block';" class="w-full bg-white/10 text-white font-medium py-3 rounded-xl hover:bg-white/20 transition-all">Anladım</button>
         </div>
     </div>
 
-    <div id="main-panel" class="hidden w-full max-w-2xl p-6 text-center z-10 my-10 relative">
+    <div id="main-panel" class="hidden w-full max-w-4xl p-6 text-center z-10 relative">
         <h1 id="welcome-text" class="text-4xl md:text-5xl font-semibold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500 tracking-tight"></h1>
         
-        <div id="ada-section" class="hidden space-y-8 fade-in">
-            <div class="glass rounded-[3rem] p-8 shadow-2xl">
+        <div id="ada-section" class="hidden space-y-10 fade-in">
+            <div class="glass rounded-[3rem] p-8 shadow-2xl max-w-2xl mx-auto">
                 <p class="text-[10px] tracking-[0.4em] text-gray-400 mb-6 uppercase">Sürprize Kalan Zaman</p>
                 <div class="grid grid-cols-4 gap-2 text-center">
                     <div><span id="d" class="text-3xl md:text-5xl font-light">00</span><p class="text-[10px] text-gray-600 mt-2">GÜN</p></div>
@@ -57,17 +56,28 @@
                 </div>
             </div>
 
-            <div class="glass rounded-3xl p-6 text-left space-y-6">
-                <p class="text-sm text-gray-300">Buraya özel bir mesaj yazabilirsin...</p>
+            <div class="text-left mt-12">
+                <h2 class="text-xl text-gray-300 font-light tracking-widest mb-6 uppercase border-b border-white/10 pb-4">Bizim Anılarımız</h2>
                 
-                <img src="foto1.jpg" alt="Özel Anı" class="w-full h-auto rounded-xl object-cover hidden">
-                
-                </div>
-        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="medya-alani">
+                    
+                    <div class="glass p-2 rounded-2xl">
+                        <img src="medya/1.jpg" class="w-full h-64 object-cover rounded-xl shadow-lg" alt="Anı 1">
+                    </div>
 
-        <div id="admin-section" class="hidden glass rounded-3xl p-8 fade-in text-left">
+                    <div class="glass p-2 rounded-2xl">
+                        <video controls class="w-full h-64 object-cover rounded-xl shadow-lg">
+                            <source src="medya/video1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+
+                    </div>
+            </div>
+            </div>
+
+        <div id="admin-section" class="hidden glass rounded-3xl p-8 fade-in text-left max-w-md mx-auto">
             <p class="text-green-400 mb-6 font-medium text-center">Yönetici Yetkisi Doğrulandı.</p>
-            <p class="text-gray-400 text-sm mb-4">Bu alana sitenin arka plan kontrollerini veya gizli dosyaları koyabilirsin.</p>
+            <p class="text-gray-400 text-sm mb-4">Site tıkır tıkır çalışıyor patron.</p>
         </div>
     </div>
 
@@ -86,6 +96,26 @@
     </div>
 
     <script>
+        // Rastgele Yıldız Üretici (Uzay Efekti)
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 100; // Yıldız sayısını buradan artırıp azaltabilirsin
+            for (let i = 0; i < starCount; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                let size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                star.style.animationDelay = (Math.random() * 3) + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Rol ve URL Kontrolleri
         const urlParams = new URLSearchParams(window.location.search);
         const role = urlParams.get('role');
 
@@ -104,13 +134,12 @@
             } else if (role === 'admin') {
                 document.getElementById('auth-modal').classList.replace('hidden', 'flex');
             } else {
-                // CHROME ALERT YERİNE SİTENİN KENDİ MODALI ÇALIŞIYOR
                 document.getElementById('custom-alert').classList.replace('hidden', 'flex');
                 this.style.display = 'none';
             }
         };
 
-        // Admin Parola Kontrolü (Önceden belirlenen şifre ile)
+        // Daha önce belirlediğimiz Admin parolası
         document.getElementById('login-btn').onclick = function() {
             if (document.getElementById('pass-input').value === "ada seni çok seviyorum") { 
                 document.getElementById('auth-modal').classList.replace('flex', 'hidden');
@@ -119,7 +148,6 @@
                 document.getElementById('main-panel').classList.remove('hidden');
                 document.getElementById('admin-section').classList.remove('hidden');
             } else {
-                // Şifre yanlışsa giriş kutusunu kırmızı yap
                 const inp = document.getElementById('pass-input');
                 inp.classList.add('border-red-500');
                 setTimeout(() => inp.classList.remove('border-red-500'), 1000);
