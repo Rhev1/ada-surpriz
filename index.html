@@ -205,15 +205,21 @@
                     document.getElementById('vault-open').classList.remove('hidden');
                 }
             }, 1000);
-        }
 
-        const data = [
-            { t: 'photo', s: 'medya/1.jpg' },
-            { t: 'photo', s: 'medya/2.jpg' },
-            { t: 'video', s: 'v.mp4' },
-            { t: 'audio', s: 'a.mp3' },
-            { t: 'text', s: 't.txt' }
-        ];
+
+const data = [];
+
+// 1'den 84'e kadar olan fotoğrafları otomatik ekler
+for (let i = 1; i <= 84; i++) {
+    data.push({ t: 'photo', s: `medya/${i}.jpg` });
+}
+
+// Videolar, sesler ve metinler için bunları manuel eklemeye devam edebilirsin:
+data.push(
+    { t: 'video', s: 'medya/video1.mp4' },
+    { t: 'audio', s: 'medya/ses1.mp3' },
+    { t: 'text', s: 'medya/notlar.txt' }
+);
 
         function goVault(isAdmin=false) {
             document.getElementById('v-timer').classList.add('hidden');
