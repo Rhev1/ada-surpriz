@@ -3,239 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juno Vault | High-End System</title>
+    <title>Juno Universe | Rhev1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --aurora-1: rgba(0, 255, 150, 0.4); --aurora-2: rgba(162, 0, 255, 0.3); }
         body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; min-height: 100vh; overflow: hidden; }
 
-        /* 🌌 GERÇEKÇİ KUZEY IŞIKLARI */
-        .aurora-container {
-            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-            z-index: 1; pointer-events: none; opacity: 0.8;
+        /* 🌌 KUZEY IŞIKLARI (Görmeme şansın yok, çok daha parlak) */
+        .aurora-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 150, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(162, 0, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 150, 255, 0.15) 0%, transparent 60%);
+            filter: blur(80px); animation: auroraMove 15s infinite alternate ease-in-out;
         }
-        .aurora-blob {
-            position: absolute; width: 800px; height: 600px;
-            background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%);
-            filter: blur(120px); animation: flow 20s infinite alternate;
-        }
-        .aurora-blob.second {
-            background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
-            right: 10%; top: 20%; animation-duration: 25s;
-        }
-        @keyframes flow { 
-            0% { transform: translate(0,0) scale(1) rotate(0deg); } 
-            100% { transform: translate(100px, 200px) scale(1.2) rotate(20deg); } 
+        @keyframes auroraMove {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            100% { transform: scale(1.2) translate(20px, 40px); opacity: 0.9; }
         }
 
-        /* ✨ PARLAK YILDIZLAR VE KAYAN YILDIZLAR */
+        /* ✨ YILDIZLAR */
         #star-field { position: fixed; inset: 0; z-index: 2; }
-        .star { position: absolute; background: #fff; border-radius: 50%; box-shadow: 0 0 5px #fff; animation: twinkle var(--d) infinite alternate; }
-        @keyframes twinkle { 0% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--d) infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        /* 🦌 CEYLAN FİGÜRÜ (Hayali/Ethereal) */
+        .gazelle {
+            position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+            width: 50px; opacity: 0.4; filter: drop-shadow(0 0 10px rgba(0,255,150,0.5));
+            animation: float 4s infinite ease-in-out;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(-50%) translateX(0); } 50% { transform: translateY(-60%) translateX(5px); } }
+
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        .shooting-star {
-            position: absolute; height: 2px; background: linear-gradient(90deg, #fff, transparent);
-            z-index: 3; filter: drop-shadow(0 0 5px #fff); animation: shoot 4s linear infinite;
-        }
-        @keyframes shoot { 
-            0% { transform: translateX(0) translateY(0) rotate(-45deg) scaleX(0); opacity: 0; }
-            5% { opacity: 1; scaleX(1); }
-            20% { transform: translateX(-500px) translateY(500px) rotate(-45deg) scaleX(1); opacity: 0; }
-            100% { opacity: 0; }
-        }
-
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .speech-bubble { background: #fff; color: #000; padding: 10px 20px; border-radius: 20px; font-weight: 800; position: relative; animation: bounce 2s infinite; }
-        .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-width: 10px 10px 0; border-style: solid; border-color: #fff transparent transparent; transform: translateX(-50%); }
+        /* Karikatür Balonu */
+        .bubble { background: #fff; color: #000; padding: 12px 25px; border-radius: 25px; font-weight: 900; position: relative; animation: bounce 2s infinite; }
+        .bubble::after { content: ''; position: absolute; bottom: -12px; left: 50%; border: 12px solid transparent; border-top-color: #fff; transform: translateX(-50%); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        /* Tarama Efekti */
-        .scan-line { width: 100%; height: 2px; background: #00ff96; position: absolute; top: 0; left: 0; animation: scan 2s infinite; box-shadow: 0 0 15px #00ff96; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="aurora-container">
-        <div class="aurora-blob"></div>
-        <div class="aurora-blob second"></div>
-    </div>
+    <div class="aurora-bg"></div>
     <div id="star-field"></div>
 
-    <div id="landing" class="relative z-10 flex flex-col items-center justify-center min-h-screen text-center">
-        <div class="speech-bubble mb-8">TIKLA!</div>
-        <div id="main-gif" class="cursor-pointer group">
-            <div class="relative p-2 rounded-full border-4 border-white/10 group-hover:border-white/30 transition-all">
-                <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" 
-                     class="w-64 h-64 rounded-full object-cover shadow-[0_0_80px_rgba(255,255,255,0.1)]">
-            </div>
+    <div id="screen-landing" class="relative z-10 flex flex-col items-center justify-center min-h-screen">
+        <div class="bubble mb-10 text-xl tracking-tighter">TIKLA!</div>
+        <div id="btn-gif" class="cursor-pointer group relative">
+            <div class="absolute inset-0 bg-green-500/20 rounded-full blur-3xl group-hover:bg-green-500/40 transition-all"></div>
+            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" 
+                 class="w-72 h-72 rounded-full object-cover relative border-4 border-white/10 group-hover:scale-105 transition-all">
         </div>
     </div>
 
-    <div id="auth-modal" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-6">
-        <div class="glass max-w-sm w-full p-10 rounded-[3rem] text-center relative overflow-hidden">
-            <div id="ada-auth" class="hidden space-y-8">
-                <div class="w-24 h-24 mx-auto bg-white/5 rounded-3xl relative overflow-hidden flex items-center justify-center border border-white/10">
-                    <div class="scan-line"></div>
-                    <span class="text-4xl">📱</span>
+    <div id="modal-auth" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl hidden items-center justify-center p-6 text-center">
+        <div class="glass p-12 rounded-[3.5rem] max-w-sm w-full border-white/20">
+            <div id="ada-nfc" class="hidden space-y-8">
+                <div class="text-6xl animate-pulse">🎴</div>
+                <h3 class="text-2xl font-bold italic">Kart Bekleniyor...</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">"Sistem sadece fiziksel Juno kartının temasıyla aktifleşir."</p>
+                <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 animate-[loading_3s_infinite]" style="width: 30%"></div>
                 </div>
-                <div>
-                    <h3 class="text-xl font-bold">Kart Bekleniyor</h3>
-                    <p class="text-xs text-gray-500 mt-2 leading-relaxed italic">"Bu kapı sadece fiziksel kartın temasıyla açılabilir..."</p>
-                </div>
-                <button onclick="startNFCScan()" id="nfc-btn" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs tracking-widest hover:scale-105 transition-all uppercase">Kartı Tara</button>
+                <p class="text-[10px] text-green-500/50 uppercase tracking-widest">NFC Modülü Aktif</p>
             </div>
 
             <div id="admin-auth" class="hidden space-y-6">
-                <h3 class="text-xl font-bold">Admin Girişi</h3>
-                <input type="password" id="admin-pw" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none focus:border-green-500 transition-all" placeholder="Parola">
-                <button id="admin-login-btn" class="w-full bg-green-500 text-black py-4 rounded-2xl font-bold">SİSTEMİ AÇ</button>
+                <h3 class="text-xl font-bold">Patron Girişi</h3>
+                <input type="password" id="input-pw" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none focus:border-white/40" placeholder="Parola">
+                <button id="btn-admin-login" class="w-full bg-white text-black py-4 rounded-2xl font-black">SİSTEMİ AÇ</button>
             </div>
         </div>
     </div>
 
-    <div id="waiting" class="fixed inset-0 z-[80] bg-black hidden flex-col items-center justify-center p-6 text-center">
-        <h2 class="text-gray-500 text-xs tracking-[0.5em] uppercase mb-10">Daha beklemen gerek...</h2>
-        <div class="grid grid-cols-4 gap-6 md:gap-10 text-4xl md:text-8xl font-black italic" id="timer">
-            <div><span id="d" class="text-white">00</span><p class="text-[10px] not-italic text-gray-600 mt-4 uppercase">Gün</p></div>
-            <div><span id="h" class="text-white">00</span><p class="text-[10px] not-italic text-gray-600 mt-4 uppercase">Saat</p></div>
-            <div><span id="m" class="text-white">00</span><p class="text-[10px] not-italic text-gray-600 mt-4 uppercase">Dak</p></div>
-            <div><span id="s" class="text-green-500">00</span><p class="text-[10px] not-italic text-gray-600 mt-4 uppercase">Sn</p></div>
+    <div id="screen-waiting" class="fixed inset-0 z-[80] bg-black hidden flex-col items-center justify-center p-6">
+        <div class="relative">
+            <h2 class="text-gray-500 text-xs tracking-[0.5em] uppercase mb-12 text-center italic">Daha beklemen gerek...</h2>
+            
+            <div class="grid grid-cols-4 gap-6 md:gap-12 text-5xl md:text-8xl font-black text-center relative">
+                <div><span id="d">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">GÜN</p></div>
+                <div><span id="h">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">SAAT</p></div>
+                <div><span id="m">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">DAK</p></div>
+                <div><span id="s" class="text-green-500">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">SN</p></div>
+
+                <div class="gazelle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
+                        <path d="M12 2c0 2 2 4 4 4s4-2 4-4M4 2c0 2-2 4-4 4s-4-2-4-4M12 22v-8m0 0l-4-4m4 4l4-4M8 10h8" />
+                        <circle cx="12" cy="8" r="3" />
+                    </svg>
+                </div>
+            </div>
         </div>
-        <div id="final-btn-area" class="hidden mt-12 animate-bounce">
-            <button onclick="showVault()" class="bg-white text-black px-12 py-5 rounded-full font-black text-xl">SÜRPRİZİ AÇ! 🎉</button>
+
+        <div id="area-congrats" class="hidden mt-16">
+            <button onclick="openVault()" class="bg-white text-black px-16 py-6 rounded-full font-black text-2xl shadow-[0_0_50px_rgba(255,255,255,0.2)]">SÜRPRİZİ AÇ 🎉</button>
         </div>
     </div>
 
-    <div id="vault" class="fixed inset-0 z-[90] bg-[#020202] hidden overflow-y-auto p-6 md:p-20">
-        <div class="max-w-6xl mx-auto">
-            <header class="flex justify-between items-center mb-16">
-                <h2 class="text-3xl font-black tracking-tighter uppercase">Juno Arşivi</h2>
-                <button onclick="closeVault()" id="vault-back-btn" class="hidden glass px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10">Geri Dön</button>
-            </header>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="glass p-10 rounded-[3rem] hover:bg-white/5 transition-all">
+    <div id="screen-vault" class="fixed inset-0 z-[90] bg-black hidden overflow-y-auto p-10 md:p-24">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex justify-between items-center mb-20">
+                <h1 class="text-4xl font-black tracking-tighter uppercase">Juno Vault</h1>
+                <button id="btn-vault-back" onclick="location.reload()" class="hidden glass px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest">Kapat</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass p-12 rounded-[3rem] hover:bg-white/5 transition-all">
                     <span class="text-4xl">📸</span>
-                    <h4 class="font-bold mt-4">Fotoğraflar</h4>
-                    <div id="photo-preview" class="grid grid-cols-2 gap-2 mt-4 opacity-50"></div>
+                    <h4 class="font-bold mt-6 text-xl">Fotoğraflar</h4>
+                    <p class="text-gray-500 text-sm mt-2">Bize dair en güzel kareler.</p>
                 </div>
-                <div class="glass p-10 rounded-[3rem] hover:bg-white/5 transition-all text-gray-600">🎥 Videolar <p class="text-[10px] mt-2">Pek Yakında</p></div>
-                <div class="glass p-10 rounded-[3rem] hover:bg-white/5 transition-all text-gray-600">🎵 Sesler <p class="text-[10px] mt-2">Pek Yakında</p></div>
-                <div class="glass p-10 rounded-[3rem] hover:bg-white/5 transition-all text-gray-600">📄 Notlar <p class="text-[10px] mt-2">Pek Yakında</p></div>
-            </div>
+                </div>
         </div>
     </div>
 
-    <div id="admin-panel" class="fixed inset-0 z-[110] bg-black hidden p-8 flex flex-col md:flex-row gap-8">
-        <div class="w-full md:w-80 space-y-6">
-            <div class="glass p-8 rounded-[2.5rem] border-green-500/20">
-                <h3 class="text-xs font-black text-green-500 uppercase tracking-widest mb-6">Analiz</h3>
-                <div class="space-y-4">
-                    <div><p class="text-[10px] text-gray-500 uppercase">Giriş Denemesi</p><span id="v-count" class="text-5xl font-light">0</span></div>
-                    <div><p class="text-[10px] text-gray-500 uppercase">Sistem Saati</p><span id="live-clock" class="text-xl font-mono">00:00:00</span></div>
+    <div id="screen-admin" class="fixed inset-0 z-[120] bg-black hidden flex p-8 gap-8">
+        <div class="w-80 space-y-6">
+            <div class="glass p-8 rounded-[2.5rem]">
+                <h3 class="text-[10px] font-black text-green-500 uppercase mb-6 tracking-widest">Sistem Raporu</h3>
+                <div class="space-y-6">
+                    <div><p class="text-[9px] text-gray-500 uppercase">Ada Kaç Kez Girdi?</p><span id="stat-v" class="text-6xl font-light">0</span></div>
+                    <div><p class="text-[9px] text-gray-500 uppercase">Canlı Saat</p><span id="stat-time" class="text-xl font-mono text-gray-300">00:00:00</span></div>
                 </div>
             </div>
-            <button onclick="showVault(true)" class="w-full bg-white text-black py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl">SİTE ÖNİZLEME</button>
+            <button onclick="openVault(true)" class="w-full bg-white text-black py-5 rounded-3xl font-black text-xs uppercase tracking-widest">ÖNİZLEME MODU</button>
         </div>
-        <div class="flex-1 glass rounded-[3rem] flex items-center justify-center p-12 text-center">
+        <div class="flex-1 glass rounded-[3rem] flex items-center justify-center text-center">
             <div>
-                <h2 class="text-4xl font-bold mb-4">Hoş Geldin Patron</h2>
-                <p class="text-gray-500 max-w-sm mx-auto">Ada şu an kartını okutmak üzere pusuda bekliyor. Tüm sistem kontrolünde.</p>
+                <h2 class="text-3xl font-bold mb-4">Sistem Aktif, Patron.</h2>
+                <p class="text-gray-500 text-sm italic">"Ada sadece kartı okuttuğunda sayacı görebilir."</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. STAR & SHOOTING STAR GENERATOR
-        const starField = document.getElementById('star-field');
-        for(let i=0; i<200; i++) {
+        // 1. Yıldız Sistemi
+        const sf = document.getElementById('star-field');
+        for(let i=0; i<180; i++) {
             const s = document.createElement('div');
             s.className = 'star';
-            const size = Math.random() * 2.5;
+            const size = Math.random() * 2;
             s.style.cssText = `width:${size}px; height:${size}px; top:${Math.random()*100}%; left:${Math.random()*100}%; --d:${Math.random()*3+2}s`;
-            starField.appendChild(s);
-        }
-        setInterval(() => {
-            const ss = document.createElement('div');
-            ss.className = 'shooting-star';
-            ss.style.top = Math.random() * 50 + '%'; ss.style.left = '100%';
-            starField.appendChild(ss);
-            setTimeout(() => ss.remove(), 4000);
-        }, 6000);
-
-        // 2. LOGIC
-        const params = new URLSearchParams(window.location.search);
-        const role = params.get('role');
-        const targetDate = new Date("May 20, 2026 00:00:00").getTime();
-
-        if(role === 'ada') localStorage.setItem('ada_v', (parseInt(localStorage.getItem('ada_v') || 0) + 1));
-
-        document.getElementById('main-gif').onclick = () => {
-            document.getElementById('auth-modal').classList.replace('hidden', 'flex');
-            if(role === 'ada') document.getElementById('ada-auth').classList.remove('hidden');
-            else document.getElementById('admin-auth').classList.remove('hidden');
-        };
-
-        // NFC SCAN (GERÇEKÇİ HİS)
-        async function startNFCScan() {
-            const btn = document.getElementById('nfc-btn');
-            btn.innerText = "TARANIYOR...";
-            btn.classList.add('animate-pulse');
-            
-            // Web NFC Simülasyonu/Denetimi
-            setTimeout(() => {
-                document.getElementById('auth-modal').style.display = 'none';
-                document.getElementById('landing').style.display = 'none';
-                document.getElementById('waiting').classList.remove('hidden');
-                runTimer();
-            }, 3000);
+            sf.appendChild(s);
         }
 
-        document.getElementById('admin-login-btn').onclick = () => {
-            if(document.getElementById('admin-pw').value === "ada seni çok seviyorum") {
-                document.getElementById('auth-modal').style.display = 'none';
-                document.getElementById('landing').style.display = 'none';
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('v-count').innerText = localStorage.getItem('ada_v') || 0;
-                setInterval(() => document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(), 1000);
-            } else { alert("Erişim Reddedildi!"); }
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role');
+        const key = urlParams.get('key'); // KART KİLİDİ
+        const target = new Date("May 20, 2026 00:00:00").getTime();
+
+        document.getElementById('btn-gif').onclick = () => {
+            document.getElementById('modal-auth').classList.replace('hidden', 'flex');
+            if(role === 'ada') {
+                document.getElementById('ada-nfc').classList.remove('hidden');
+                // EĞER KEY DOĞRUYSA 3 SANİYE SONRA OTOMATİK AÇILIR (Kart Okunmuş Sayılır)
+                if(key === 'juno2026') {
+                    setTimeout(() => {
+                        document.getElementById('modal-auth').style.display = 'none';
+                        document.getElementById('screen-landing').style.display = 'none';
+                        document.getElementById('screen-waiting').classList.remove('hidden');
+                        startCount();
+                    }, 3000);
+                } else {
+                    // KEY YOKSA (Elle girdiyse) ASLA AÇILMAZ
+                    setTimeout(() => { alert("HATA: Fiziksel kart algılanmadı!"); location.reload(); }, 4000);
+                }
+            } else {
+                document.getElementById('admin-auth').classList.remove('hidden');
+            }
         };
 
-        function runTimer() {
-            const int = setInterval(() => {
-                const now = new Date().getTime();
-                const diff = targetDate - now;
+        document.getElementById('btn-admin-login').onclick = () => {
+            if(document.getElementById('input-pw').value === "ada seni çok seviyorum") {
+                document.getElementById('modal-auth').style.display = 'none';
+                document.getElementById('screen-landing').style.display = 'none';
+                document.getElementById('screen-admin').classList.remove('hidden');
+                document.getElementById('stat-v').innerText = localStorage.getItem('ada_v') || 0;
+                setInterval(() => document.getElementById('stat-time').innerText = new Date().toLocaleTimeString(), 1000);
+            }
+        };
+
+        function startCount() {
+            if(role === 'ada') localStorage.setItem('ada_v', (parseInt(localStorage.getItem('ada_v') || 0) + 1));
+            const timer = setInterval(() => {
+                const diff = target - new Date().getTime();
                 if(diff > 0) {
                     document.getElementById('d').innerText = Math.floor(diff / 86400000).toString().padStart(2, '0');
                     document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
                     document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
                     document.getElementById('s').innerText = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
                 } else {
-                    clearInterval(int);
-                    document.querySelector('#waiting h2').innerText = "VAKİT GELDİ!";
-                    document.getElementById('timer').classList.add('hidden');
-                    document.getElementById('final-btn-area').classList.remove('hidden');
+                    clearInterval(timer);
+                    document.getElementById('area-congrats').classList.remove('hidden');
                 }
             }, 1000);
         }
 
-        function showVault(isAdmin = false) {
-            document.getElementById('waiting').classList.add('hidden');
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('vault').classList.remove('hidden');
-            if(isAdmin) document.getElementById('vault-back-btn').classList.remove('hidden');
-            
-            const grid = document.getElementById('photo-preview');
-            grid.innerHTML = '';
-            for(let i=1; i<=4; i++) {
-                grid.innerHTML += `<img src="medya/${i}.jpg" class="w-full h-full object-cover rounded-xl" onerror="this.style.display='none'">`;
-            }
-        }
-
-        function closeVault() {
-            document.getElementById('vault').classList.add('hidden');
-            document.getElementById('admin-panel').classList.remove('hidden');
+        function openVault(isAdmin = false) {
+            document.getElementById('screen-waiting').classList.add('hidden');
+            document.getElementById('screen-admin').classList.add('hidden');
+            document.getElementById('screen-vault').classList.remove('hidden');
+            if(isAdmin) document.getElementById('btn-vault-back').classList.remove('hidden');
         }
     </script>
 </body>
