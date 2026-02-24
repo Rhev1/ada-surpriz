@@ -112,6 +112,7 @@
         <div class="max-w-4xl w-full flex flex-col items-center">
             <div id="lb-content" class="w-full flex justify-center"></div>
             <div class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
+                <div id="lb-counter" class="text-[10px] text-green-500 font-bold mb-2 tracking-widest uppercase">0 / 0</div>
                 <p id="lb-desc" class="text-gray-300 leading-relaxed italic mb-6">Yükleniyor...</p>
                 <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold text-xs uppercase hover:bg-green-500 hover:text-white transition-all">
                     <span>📥 Dosyayı İndir</span>
@@ -153,17 +154,22 @@
         }
 
         // BURASI NOTLARIN OLDUĞU YER
-        // İstediğin fotoğraf numarasına göre buraya ekleme yapabilirsin.
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?",
-            // Örnek: 3: "Burası çok güzeldi", 
+            3: "Her ne kadar sakalsız o kadar iyi olmasam da yakışıyormuşuz.", 
+            4: "Yapay zekanın gücü adına.",
+            5: "Sonuç olarak ada fotoğrafı.",
+            6: "Bu fotoğraf da çok tatlı.",
+            7: "Duvar kağıdını hatırlıyor musun?",
+            8: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
+            9: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
+            10: "Duvar kağıdını hatırlıyor musun?",
             130: "Ve şimdilik sonuncusu!" 
         };
 
         const data = [];
         for (let i = 1; i <= 136; i++) {
-            // "messages[i]" kodu otomatik olarak yukarıdaki listeden notu çeker, yoksa varsayılan metni yazar.
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
 
@@ -173,9 +179,8 @@
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
         const key = url.get('key');
-        const target = new Date("May 20, 2026 00:00:00").getTime();
+        const target = new Date("February 24, 2026 12:50:00").getTime();
 
-        // Otomatik NFC Girişi
         window.onload = () => {
             if(role === 'ada' && key === 'juno2026') {
                 document.getElementById('view-auth').classList.replace('hidden', 'flex');
@@ -256,8 +261,13 @@
             const lb = document.getElementById('lightbox');
             const content = document.getElementById('lb-content');
             const dl = document.getElementById('lb-download');
+            const counter = document.getElementById('lb-counter');
+            
             document.getElementById('lb-desc').innerText = item.d;
             dl.href = item.s;
+            
+            // Sıra Numarası Güncelleme (Mevcut Index + 1 / Toplam Sayı)
+            counter.innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
             
             if(item.t === 'photo') content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
             else if(item.t === 'video') content.innerHTML = `<video src="${item.s}" controls class="max-h-[70vh] rounded-3xl"></video>`;
@@ -271,7 +281,6 @@
             lb.style.pointerEvents = 'auto';
         }
 
-        // Büyük ekran içindeki ileri-geri fonksiyonu
         function navLightbox(dir) {
             currentItemIndex += dir;
             if(currentItemIndex < 0) currentItemIndex = filteredData.length - 1;
@@ -299,7 +308,6 @@
             document.getElementById('view-admin').classList.remove('hidden');
         }
 
-        // Klavye ile geçiş desteği (Opsiyonel ama çok rahattır)
         document.addEventListener('keydown', (e) => {
             if(!document.getElementById('lightbox').classList.contains('hidden')) {
                 if(e.key === "ArrowRight") navLightbox(1);
