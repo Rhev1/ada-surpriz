@@ -24,7 +24,6 @@
         .vault-item:hover { transform: translateY(-10px) scale(1.02); }
         #lightbox { transition: opacity 0.4s ease; }
 
-        /* Büyük Ekran (Lightbox) Navigasyon Tuşları */
         .lb-nav {
             position: absolute;
             top: 50%;
@@ -144,7 +143,6 @@
     </div>
 
     <script>
-        // Yıldızlar
         const sf = document.getElementById('star-field');
         for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className='star';
@@ -153,28 +151,135 @@
             sf.appendChild(s);
         }
 
-        // BURASI NOTLARIN OLDUĞU YER
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?",
-            3: "Her ne kadar sakalsız o kadar iyi olmasam da yakışıyormuşuz.", 
+            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
             4: "Yapay zekanın gücü adına.",
             5: "Sonuç olarak ada fotoğrafı.",
             6: "Bu fotoğraf da çok tatlı.",
-            7: "Duvar kağıdını hatırlıyor musun?",
-            8: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
-            9: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
-            10: "Duvar kağıdını hatırlıyor musun?",
-            130: "Ve şimdilik sonuncusu!" 
+            7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
+            8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
+            9: "Bunlar da yapay zeka ama efsaneler.", 
+            10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
+            11: "Hediyeyi başka biri almıştı. (Kızgın emojisi)",
+            12: "Bu da...",
+            13: "ve yine bu da...",
+            14: "Abi başka bir böyle yakışan çift var mı? Sanmam.",
+            15: "Yine yapay zeka ama ada fotoğrafı.",
+            16: "Çok güzelsin sevgilim. Her şeyden daha fazla güzelsin.",
+            17: "Pek benzetememiş olsa bile yine yakışıyoruz.",
+            18: "Bu efekt ne yavrum.",
+            19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
+            20: "Emin ol en güzeli sensin bu dünyada ki.",
+            21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.",  
+            25: "Ne kadar da tatlı benim sevdiğim.",
+            27: "Yerim o gülüşünü.",
+            28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.",
+            29: "Olabilecek hayallerden.",
+            31: "Tatilden gelinmiş o bileklik alınmış ve yanılmış hayrola MİSS TURKEY şampiyonu.",
+            32: "Gerçekten gay gibi çıkmışım.",
+            33: "Kullanırken bile duvar kağıdına daldığım o fotoğraf.",
+            34: "Benim en beğendiğim yapay zeka fotoğraflarından biri bence mükemmelll.",
+            35: "Altın oransın sevgilim gerçekten altın oran.",
+            36: "Bu inşallah daha çok olabilecek hayallerden.",
+            37: "Bu duvar kağıdı da çok asildi bence.",
+            38: "Heeyt iki deli kurşun gibiyiz. Arkadaşken bile yakıştırılıyorduk.",
+            39: "Telefonun ekranından sana bakıyorum bu arada.",
+            40: "Çek dili içeri bakayım.",
+            41: "Kaç gece saatlerce izledim ben bile bilmiyorum.",
+            42: "Yine gay gibiyim.",
+            43: "Oy yerim ben bu tatlılığı.",
+            44: "Yine mükemmel çıktığımız 2 fotoğraf 1.",
+            45: "2.",
+            46: "Şu dünyada senden daha güzeli yok derken şaka yapmıyordum. Senden daha güzel kimse yok.",
+            47: "Bu fotoğraf niye böyle kalmış bilmiyorum ama bence bu fotoğraf aşırı tatlı.",
+            48: "Sen bununla güzelsin ben de Ada'yı seviyorum.",
+            49: "Yapay zeka'nın normal hali. Yorulmuşuz tabii.",
+            50: "İki güzel yan yana.",
+            51: "Buralara çok yorum yapmıyorum",
+            52: "Çok iyi zamanlardı ama ya sevmiştim tekrar isteyebilirim.",
+            54: "Hangisi en tatlı yarışması mı yapıyoruz? Tabiki sen.",
+            55: "Buralarda çok iyi değil miyiz? Gerçi her zaman iyiyiz?",
+            58: "Dersten sıkılmış Ada Su Aydemir",
+            59: "Bir mat sorusu bir de poz vereyim anlarsın ya ben Ada Su'yum.",
+            60: "Senin elinden zehir olsa yerim.",
+            61: "Nasıl katlanmışız, neyse.",
+            62: "Abi çok güzelsin yemin ederim.",
+            63: "Yorumsuz.",
+            64: "En soldaki çıtırın insta??",
+            65: "Deniz kadar güzel, gökyüzü kadar eşsizsin.",
+            66: "şşşş yorum yok.",
+            67: "İşte ileride o çocuklarımıza göstereceğimiz net fotoğraf.",
+            68: "Seni terbiyesiz seni.",
+            69: "Gerçeğini çekeriz ya rahat ol.",
+            70: "Bu adam kim hayırdır?",
+            71: "Keşke o zamanlar tanışsaydık. O zaman da öpmeye doyamazdım tatlılığından.",
+            72: "Şuna baaak adaaaa.",
+            73: "Mükemmel anneden mükemmel annelik.",
+            74: "KIZA HER ŞEY YAKIŞIYOR.",
+            75: "Anlıklarına bitiyorum desem.",
+            76: "Buna da bayıldım bittim mesela.",
+            77: "Bu gün mükemmel bir gündü ya.",
+            78: "O 24 saatten fotoğraflar",
+            79: "Bu da...",
+            80: "Bu da...",
+            81: "ve bu da.",
+            82: "Sana çok aşığım be kızım bakışlarımdan belli değil mi.",
+            83: "İğrenç çıkmışım ama fotoğrafın hikayesi güzel.",
+            84: "Bu üçlü gerçekten çok güçlü ya özledim o günleri.",
+            85: "Her fotoğrafta yine evrenin mükemmelliğini gösteriyorsun.",
+            86: "Hayrola iki prenses ne yapıyorsunuz burada.",
+            87: "İşte seni en beğendiğim fotoğraf arada bir açıp bakıyorum yalan yok çok seviyorum seni.",
+            88: "Mükemmel eşim.",
+            89: "Kapat ağzını sinek kaçar.",
+            90: "Utangaç sevdiğim ya.",
+            91: "Her iki taraf da birbirni tamamlıyor bir uyum sağlıyor bu mükemmel.",
+            92: "Yaptırayım mı böyle bir şey.",
+            93: "MANKEN YA MANKEN.",
+            94: "SIKILMIŞ MANKEN.",
+            95: "Keşke o gün seninle tanışabilseydim.",
+            96: "İleride ki evimizde olacak o üçlü yılbaşı ağacı, juno ve karım.",
+            97: "Burada da sıkılmış manken var.",
+            98: "Bu da...",
+            99: "BUNU DA ÇOCUKLARIMIZA GÖSTERİCEEEZ.",
+            100: "Ah juno beni çok yormuştun o dönem.",
+            101: "Ama hep sıkılıyorsun ya.",
+            102: "Bunu da bebelerimize göstericeeez.",
+            103: "Köstebeeeeek, köstebeeek.",
+            104: "O gamzeye gömün beni.",
+            105: "Ne sıcaktan yanmıştım o gün ya.",
+            106: "Ah güzelim ne kadar tatlıyız ama yaa son anda tutmuştum seni.",
+            107: "Bunda da keşke tanışsaydık, seni tiyatroda seçerdim. Dimi?",
+            108: "Evden çıkarken son fotoğraf",
+            109: "Anaaaaa",
+            110: "Çiceğim çiceğini tutuyor. Bunu tiktok repostundan çalmadım. Senden önce bu siteyi tasarladım.",
+            111: "Her iki çicek aynı karede.",
+            112: "Bu da çiceklerim.",
+            113: "Çok yorgun kullanmışım.",
+            114: "Hayallerim gerçekleştii...",
+            115: "Geldiğimde de oynayacağız.",
+            116: "Bu da...",
+            117: "Bu da...",
+            118: "Bu da...",
+            119: "Bu da...",
+            120: "Bu da...",
+            114: "Bu da...",
+
+
+
+
+            136: "Ve şimdilik sonuncusu!" 
         };
 
         const data = [];
-        for (let i = 1; i <= 136; i++) {
+        const totalFiles = 136;
+        for (let i = 1; i <= totalFiles; i++) {
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
 
         let currentItemIndex = 0;
-        let filteredData = [...data];
+        let filteredData = [];
 
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
@@ -247,13 +352,27 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
 
-            filteredData = type === 'all' ? data : data.filter(item => item.t === type);
-            filteredData.forEach((item, index) => {
+            // Akıllı Filtreleme: Mevcut olmayan dosyaları gridde göstermemek için
+            const initialFiltered = type === 'all' ? data : data.filter(item => item.t === type);
+            filteredData = []; // Bu dizi openLightbox ve navigasyon için kullanılacak
+
+            initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
-                c.innerHTML = item.t === 'photo' ? `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300?text=Fotoğraf'">` : `<div class="w-full h-full flex items-center justify-center text-4xl">${item.t==='video'?'🎥':item.t==='audio'?'🎵':'📝'}</div>`;
-                c.onclick = () => { currentItemIndex = index; openLightbox(item); };
+                c.id = `item-${item.id}`;
+                
+                // Onerror eklendi: Eğer dosya bulunamazsa grid hücresini tamamen gizle
+                c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" 
+                                onerror="this.parentElement.remove();">`;
+                
+                c.onclick = () => { 
+                    // Navigasyon için tıklanan öğenin filteredData içindeki güncel yerini bul
+                    currentItemIndex = filteredData.indexOf(item);
+                    openLightbox(item); 
+                };
+                
                 grid.appendChild(c);
+                filteredData.push(item); 
             });
         }
 
@@ -265,16 +384,11 @@
             
             document.getElementById('lb-desc').innerText = item.d;
             dl.href = item.s;
-            
-            // Sıra Numarası Güncelleme (Mevcut Index + 1 / Toplam Sayı)
             counter.innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
             
-            if(item.t === 'photo') content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
-            else if(item.t === 'video') content.innerHTML = `<video src="${item.s}" controls class="max-h-[70vh] rounded-3xl"></video>`;
-            else if(item.t === 'audio') content.innerHTML = `<audio src="${item.s}" controls class="mt-10"></audio>`;
-            else { content.innerHTML = `<p class="p-10 text-xl italic">${item.d}</p>`; dl.classList.add('hidden'); }
-
-            if(item.t !== 'text') dl.classList.remove('hidden');
+            // Onerror eklendi: Lightbox içindeyken resim yoksa bir sonrakine atla
+            content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" 
+                                 onerror="navLightbox(1);">`;
 
             lb.classList.replace('hidden', 'flex');
             setTimeout(() => lb.style.opacity = '1', 10);
