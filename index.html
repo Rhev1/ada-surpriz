@@ -23,6 +23,26 @@
         .vault-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; }
         .vault-item:hover { transform: translateY(-10px) scale(1.02); }
         #lightbox { transition: opacity 0.4s ease; }
+
+        /* Kaydırma Butonları Stili */
+        .scroll-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            opacity: 0.6;
+        }
+        .scroll-nav:hover { opacity: 1; transform: translateY(-50%) scale(1.1); background: rgba(255,255,255,0.1); }
+        .scroll-up { left: 20px; transform: rotate(-90deg) translateY(0); } /* Yukarı butonu aslında sola ok gibi durur ama yukarı kaydırır */
+        .scroll-down { right: 20px; transform: rotate(90deg) translateY(0); }
     </style>
 </head>
 <body>
@@ -66,7 +86,12 @@
         <div id="vault-btn" class="hidden mt-20"><button onclick="showVault()" class="bg-white text-black px-20 py-6 rounded-full font-black text-2xl animate-pulse">KASAYI AÇ 🎉</button></div>
     </div>
 
-    <div id="view-vault" class="fixed inset-0 z-[300] bg-black hidden overflow-y-auto p-8 md:p-24">
+    <div id="vault-nav-controls" class="hidden">
+        <div onclick="scrollVault('up')" class="scroll-nav scroll-up glass">➜</div>
+        <div onclick="scrollVault('down')" class="scroll-nav scroll-down glass">➜</div>
+    </div>
+
+    <div id="view-vault" class="fixed inset-0 z-[300] bg-black hidden overflow-y-auto p-8 md:p-24 scroll-smooth">
         <div class="max-w-6xl mx-auto pb-20">
             <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
                 <h1 class="text-3xl font-black italic uppercase">Ada&Eyüp Archive</h1>
@@ -130,7 +155,6 @@
 
         const messages = { 1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 130: "Ve şimdilik sonuncusu!" };
         const data = [];
-        // 130 FOTOĞRAF DÖNGÜSÜ
         for (let i = 1; i <= 136; i++) {
             data.push({ t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
@@ -139,6 +163,15 @@
         const role = url.get('role');
         const key = url.get('key');
         const target = new Date("May 20, 2026 00:00:00").getTime();
+
+        // Sayfa yüklendiğinde NFC kontrolü
+        window.onload = () => {
+            if(role === 'ada' && key === 'juno2026') {
+                document.getElementById('view-auth').classList.replace('hidden', 'flex');
+                document.getElementById('ada-side').classList.remove('hidden');
+                start10SecNFC();
+            }
+        };
 
         document.getElementById('trigger-btn').onclick = () => {
             document.getElementById('view-auth').classList.replace('hidden', 'flex');
@@ -158,8 +191,8 @@
                 document.getElementById('nfc-text').innerText = (10 - p).toFixed(1) + "s";
                 if(p >= 10) {
                     clearInterval(inv);
-                    document.getElementById('view-auth').style.display='none';
-                    document.getElementById('view-entry').style.display='none';
+                    document.getElementById('view-auth').classList.replace('flex', 'hidden');
+                    document.getElementById('view-entry').classList.add('hidden');
                     document.getElementById('view-timer').classList.remove('hidden');
                     startMainTimer();
                 }
@@ -168,8 +201,8 @@
 
         document.getElementById('admin-enter').onclick = () => {
             if(document.getElementById('admin-pass').value === "ada seni çok seviyorum") {
-                document.getElementById('view-auth').style.display='none';
-                document.getElementById('view-entry').style.display='none';
+                document.getElementById('view-auth').classList.replace('flex', 'hidden');
+                document.getElementById('view-entry').classList.add('hidden');
                 document.getElementById('view-admin').classList.remove('hidden');
                 document.getElementById('stat-v').innerText = localStorage.getItem('ada_v') || 0;
                 startMainTimer();
@@ -196,7 +229,7 @@
             const grid = document.getElementById('vault-grid');
             grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event) event.target.classList.add('active');
 
             const filtered = type === 'all' ? data : data.filter(item => item.t === type);
             filtered.forEach(item => {
@@ -208,12 +241,18 @@
             });
         }
 
+        function scrollVault(dir) {
+            const v = document.getElementById('view-vault');
+            const amt = window.innerHeight * 0.7;
+            v.scrollBy({ top: dir === 'down' ? amt : -amt, behavior: 'smooth' });
+        }
+
         function openLightbox(item) {
             const lb = document.getElementById('lightbox');
             const content = document.getElementById('lb-content');
             const dl = document.getElementById('lb-download');
             document.getElementById('lb-desc').innerText = item.d;
-            dl.href = item.s; // İndirme linkini ata
+            dl.href = item.s;
             
             if(item.t === 'photo') content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain">`;
             else if(item.t === 'video') content.innerHTML = `<video src="${item.s}" controls class="max-h-[70vh] rounded-3xl"></video>`;
@@ -238,12 +277,14 @@
             document.getElementById('view-timer').classList.add('hidden');
             document.getElementById('view-admin').classList.add('hidden');
             document.getElementById('view-vault').classList.remove('hidden');
+            document.getElementById('vault-nav-controls').classList.remove('hidden');
             if(isAdmin) document.getElementById('adm-back').classList.remove('hidden');
             filterVault('all');
         }
 
         function closeVault() {
             document.getElementById('view-vault').classList.add('hidden');
+            document.getElementById('vault-nav-controls').classList.add('hidden');
             document.getElementById('view-admin').classList.remove('hidden');
         }
     </script>
