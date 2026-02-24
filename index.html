@@ -12,10 +12,9 @@
         #star-field { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
         .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(circle at 20% 30%, rgba(0, 255, 150, 0.15) 0%, transparent 50%); filter: blur(100px); }
         .tab-btn { transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-        .tab-btn.active { background: white; color: black; border-color: white; }
+        .tab-btn.active { background: white !important; color: black !important; border-color: white !important; }
         .vault-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
         .vault-item:hover { transform: translateY(-10px) scale(1.02); }
-        #lightbox { transition: opacity 0.4s ease; }
         
         .nav-arrow { 
             position: absolute; top: 50%; transform: translateY(-50%); 
@@ -75,11 +74,11 @@
             <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
                 <h1 class="text-3xl font-black italic uppercase">Ada&Eyüp Archive</h1>
                 <div class="flex flex-wrap justify-center gap-2">
-                    <button onclick="filterVault('all')" class="tab-btn active glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Tümü</button>
-                    <button onclick="filterVault('photo')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Fotoğraflar</button>
-                    <button onclick="filterVault('video')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Videolar</button>
-                    <button onclick="filterVault('text')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Metinler</button>
-                    <button onclick="filterVault('audio')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Sesler</button>
+                    <button onclick="filterVault('all', event)" class="tab-btn active glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Tümü</button>
+                    <button onclick="filterVault('photo', event)" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Fotoğraflar</button>
+                    <button onclick="filterVault('video', event)" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Videolar</button>
+                    <button onclick="filterVault('text', event)" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Metinler</button>
+                    <button onclick="filterVault('audio', event)" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Sesler</button>
                     <button id="adm-back" onclick="closeVault()" class="hidden bg-green-500 text-black px-6 py-2 rounded-full text-[9px] font-bold uppercase ml-4">Panele Dön</button>
                 </div>
             </header>
@@ -87,7 +86,7 @@
         </div>
     </div>
 
-    <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden items-center justify-center p-6 opacity-0 pointer-events-none">
+    <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden items-center justify-center p-6 opacity-0 pointer-events-none transition-opacity duration-400">
         <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 z-[700] hover:text-white">&times;</button>
         <div class="nav-arrow nav-left" onclick="changeMedia(-1)">❮</div>
         <div class="nav-arrow nav-right" onclick="changeMedia(1)">❯</div>
@@ -97,7 +96,7 @@
                 <p id="lb-counter" class="text-[10px] text-green-500 font-bold tracking-[0.3em] mb-2">0 / 0</p>
                 <p id="lb-desc" class="text-gray-300 italic mb-6">Açıklama...</p>
                 <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold text-xs uppercase hover:bg-green-500 hover:text-white transition-all">
-                    <span>📥 İNDİR</span>
+                    <span>📥 Dosyayı İndir</span>
                 </a>
             </div>
         </div>
@@ -110,15 +109,15 @@
                 <p class="text-[9px] text-gray-500 uppercase mb-1">Giriş Sayısı</p>
                 <span id="stat-v" class="text-6xl font-light">0</span>
             </div>
-            <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] uppercase">Önizle</button>
+            <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] uppercase">Galeriyi Önizle</button>
         </div>
         <div class="flex-1 glass rounded-[3rem] flex flex-col items-center justify-center">
-            <h2 class="text-xl font-bold italic mb-8">HEDEF TARİHE KALAN SÜRE</h2>
+            <h2 class="text-xl font-bold italic mb-8 uppercase tracking-widest">Hedef Tarihe Kalan Süre</h2>
             <div class="grid grid-cols-4 gap-8 text-4xl font-black italic">
-                <div><span id="adm-d">00</span><p class="text-[8px] text-gray-500 mt-2">GÜN</p></div>
-                <div><span id="adm-h">00</span><p class="text-[8px] text-gray-500 mt-2">SAAT</p></div>
-                <div><span id="adm-m">00</span><p class="text-[8px] text-gray-500 mt-2">DAK</p></div>
-                <div><span id="adm-s" class="text-green-500">00</span><p class="text-[8px] text-gray-500 mt-2">SN</p></div>
+                <div><span id="adm-d">00</span><p class="text-[8px] text-gray-500 mt-2 uppercase">Gün</p></div>
+                <div><span id="adm-h">00</span><p class="text-[8px] text-gray-500 mt-2 uppercase">Saat</p></div>
+                <div><span id="adm-m">00</span><p class="text-[8px] text-gray-500 mt-2 uppercase">Dak</p></div>
+                <div><span id="adm-s" class="text-green-500">00</span><p class="text-[8px] text-gray-500 mt-2 uppercase">Sn</p></div>
             </div>
         </div>
     </div>
@@ -132,11 +131,19 @@
             sf.appendChild(s);
         }
 
-        const messages = { 1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 130: "Ve şimdilik sonuncusu!", 136: "İşte şimdi tam olarak sonuncusu! ❤️" };
+        // --- VERİ VE MESAJLAR ---
+        const messages = { 
+            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
+            2: "Duvar kağıdını hatırlıyor musun?", 
+            130: "Ve şimdilik sonuncusu!", 
+            136: "İşte şimdi tam olarak sonuncusu! ❤️" 
+        };
+
         const data = [];
         let currentIndex = 0;
         let currentFilteredData = [];
 
+        // 136 Fotoğrafı Datalara Ekle
         for (let i = 1; i <= 136; i++) {
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
@@ -144,6 +151,7 @@
         const url = new URLSearchParams(window.location.search);
         const target = new Date("May 20, 2026 00:00:00").getTime();
 
+        // Giriş Kontrolü
         document.getElementById('trigger-btn').onclick = () => {
             document.getElementById('view-auth').classList.replace('hidden', 'flex');
             if(url.get('role') === 'ada' && url.get('key') === 'juno2026') {
@@ -164,6 +172,7 @@
             } else { document.getElementById('admin-side').classList.remove('hidden'); }
         };
 
+        // Admin Şifre Kontrolü
         document.getElementById('admin-enter').onclick = () => {
             if(document.getElementById('admin-pass').value === "ada seni çok seviyorum") {
                 document.getElementById('view-auth').style.display='none';
@@ -174,6 +183,7 @@
             }
         };
 
+        // Sayaç Başlatma (Hem Ana Hem Admin)
         function startTimer() {
             if(url.get('role') === 'ada') localStorage.setItem('ada_v', (parseInt(localStorage.getItem('ada_v') || 0) + 1));
             setInterval(() => {
@@ -183,12 +193,10 @@
                 const m = Math.max(0, Math.floor((diff%3600000)/60000)).toString().padStart(2,'0');
                 const s = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
                 
-                // Ana Sayaç
                 if(document.getElementById('d')) {
                     document.getElementById('d').innerText = d; document.getElementById('h').innerText = h;
                     document.getElementById('m').innerText = m; document.getElementById('s').innerText = s;
                 }
-                // Admin Sayacı
                 if(document.getElementById('adm-d')) {
                     document.getElementById('adm-d').innerText = d; document.getElementById('adm-h').innerText = h;
                     document.getElementById('adm-m').innerText = m; document.getElementById('adm-s').innerText = s;
@@ -197,12 +205,15 @@
             }, 1000);
         }
 
-        function filterVault(type) {
+        // Galeri Filtreleme
+        function filterVault(type, event) {
             const grid = document.getElementById('vault-grid');
             grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event) event.target.classList.add('active');
+
             currentFilteredData = type === 'all' ? data : data.filter(item => item.t === type);
+            
             currentFilteredData.forEach((item, index) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
@@ -212,8 +223,10 @@
             });
         }
 
+        // Lightbox Fonksiyonları
         function openLightbox(index) {
-            currentIndex = index; updateLightbox();
+            currentIndex = index;
+            updateLightbox();
             const lb = document.getElementById('lightbox');
             lb.classList.replace('hidden', 'flex');
             setTimeout(() => lb.style.opacity = '1', 10);
@@ -222,7 +235,19 @@
 
         function updateLightbox() {
             const item = currentFilteredData[currentIndex];
-            document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
+            const content = document.getElementById('lb-content');
+            
+            // Medya tipine göre gösterim
+            if(item.t === 'photo') {
+                content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
+            } else if(item.t === 'video') {
+                content.innerHTML = `<video src="${item.s}" controls class="max-h-[70vh] rounded-3xl"></video>`;
+            } else if(item.t === 'audio') {
+                content.innerHTML = `<audio src="${item.s}" controls class="mt-10"></audio>`;
+            } else {
+                content.innerHTML = `<p class="p-10 text-xl italic">${item.d}</p>`;
+            }
+
             document.getElementById('lb-desc').innerText = item.d;
             document.getElementById('lb-counter').innerText = `${currentIndex + 1} / ${currentFilteredData.length}`;
             document.getElementById('lb-download').href = item.s;
@@ -254,6 +279,7 @@
             document.getElementById('view-admin').classList.remove('hidden');
         }
 
+        // Klavye Desteği
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('lightbox').classList.contains('flex')) {
                 if (e.key === "ArrowRight") changeMedia(1);
