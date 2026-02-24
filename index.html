@@ -24,25 +24,26 @@
         .vault-item:hover { transform: translateY(-10px) scale(1.02); }
         #lightbox { transition: opacity 0.4s ease; }
 
-        /* Kaydırma Butonları Stili */
-        .scroll-nav {
-            position: fixed;
+        /* Büyük Ekran (Lightbox) Navigasyon Tuşları */
+        .lb-nav {
+            position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 1000;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            width: 50px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: 0.3s;
-            opacity: 0.6;
+            z-index: 600;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
-        .scroll-nav:hover { opacity: 1; transform: translateY(-50%) scale(1.1); background: rgba(255,255,255,0.1); }
-        .scroll-up { left: 20px; transform: rotate(-90deg) translateY(0); } /* Yukarı butonu aslında sola ok gibi durur ama yukarı kaydırır */
-        .scroll-down { right: 20px; transform: rotate(90deg) translateY(0); }
+        .lb-nav:hover { background: rgba(255,255,255,0.2); }
+        .lb-prev { left: 20px; }
+        .lb-next { right: 20px; }
     </style>
 </head>
 <body>
@@ -86,12 +87,7 @@
         <div id="vault-btn" class="hidden mt-20"><button onclick="showVault()" class="bg-white text-black px-20 py-6 rounded-full font-black text-2xl animate-pulse">KASAYI AÇ 🎉</button></div>
     </div>
 
-    <div id="vault-nav-controls" class="hidden">
-        <div onclick="scrollVault('up')" class="scroll-nav scroll-up glass">➜</div>
-        <div onclick="scrollVault('down')" class="scroll-nav scroll-down glass">➜</div>
-    </div>
-
-    <div id="view-vault" class="fixed inset-0 z-[300] bg-black hidden overflow-y-auto p-8 md:p-24 scroll-smooth">
+    <div id="view-vault" class="fixed inset-0 z-[300] bg-black hidden overflow-y-auto p-8 md:p-24">
         <div class="max-w-6xl mx-auto pb-20">
             <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
                 <h1 class="text-3xl font-black italic uppercase">Ada&Eyüp Archive</h1>
@@ -109,7 +105,10 @@
     </div>
 
     <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden items-center justify-center p-6 opacity-0 pointer-events-none">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 hover:text-white">&times;</button>
+        <div onclick="navLightbox(-1)" class="lb-nav lb-prev text-2xl">❮</div>
+        <div onclick="navLightbox(1)" class="lb-nav lb-next text-2xl">❯</div>
+        
+        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 hover:text-white z-[600]">&times;</button>
         <div class="max-w-4xl w-full flex flex-col items-center">
             <div id="lb-content" class="w-full flex justify-center"></div>
             <div class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
@@ -153,18 +152,30 @@
             sf.appendChild(s);
         }
 
-        const messages = { 1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 130: "Ve şimdilik sonuncusu!" };
+        // BURASI NOTLARIN OLDUĞU YER
+        // İstediğin fotoğraf numarasına göre buraya ekleme yapabilirsin.
+        const messages = { 
+            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
+            2: "Duvar kağıdını hatırlıyor musun?",
+            // Örnek: 3: "Burası çok güzeldi", 
+            130: "Ve şimdilik sonuncusu!" 
+        };
+
         const data = [];
         for (let i = 1; i <= 136; i++) {
-            data.push({ t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
+            // "messages[i]" kodu otomatik olarak yukarıdaki listeden notu çeker, yoksa varsayılan metni yazar.
+            data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
+
+        let currentItemIndex = 0;
+        let filteredData = [...data];
 
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
         const key = url.get('key');
         const target = new Date("May 20, 2026 00:00:00").getTime();
 
-        // Sayfa yüklendiğinde NFC kontrolü
+        // Otomatik NFC Girişi
         window.onload = () => {
             if(role === 'ada' && key === 'juno2026') {
                 document.getElementById('view-auth').classList.replace('hidden', 'flex');
@@ -191,8 +202,8 @@
                 document.getElementById('nfc-text').innerText = (10 - p).toFixed(1) + "s";
                 if(p >= 10) {
                     clearInterval(inv);
-                    document.getElementById('view-auth').classList.replace('flex', 'hidden');
-                    document.getElementById('view-entry').classList.add('hidden');
+                    document.getElementById('view-auth').style.display='none';
+                    document.getElementById('view-entry').style.display='none';
                     document.getElementById('view-timer').classList.remove('hidden');
                     startMainTimer();
                 }
@@ -201,8 +212,8 @@
 
         document.getElementById('admin-enter').onclick = () => {
             if(document.getElementById('admin-pass').value === "ada seni çok seviyorum") {
-                document.getElementById('view-auth').classList.replace('flex', 'hidden');
-                document.getElementById('view-entry').classList.add('hidden');
+                document.getElementById('view-auth').style.display='none';
+                document.getElementById('view-entry').style.display='none';
                 document.getElementById('view-admin').classList.remove('hidden');
                 document.getElementById('stat-v').innerText = localStorage.getItem('ada_v') || 0;
                 startMainTimer();
@@ -231,20 +242,14 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
 
-            const filtered = type === 'all' ? data : data.filter(item => item.t === type);
-            filtered.forEach(item => {
+            filteredData = type === 'all' ? data : data.filter(item => item.t === type);
+            filteredData.forEach((item, index) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
                 c.innerHTML = item.t === 'photo' ? `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300?text=Fotoğraf'">` : `<div class="w-full h-full flex items-center justify-center text-4xl">${item.t==='video'?'🎥':item.t==='audio'?'🎵':'📝'}</div>`;
-                c.onclick = () => openLightbox(item);
+                c.onclick = () => { currentItemIndex = index; openLightbox(item); };
                 grid.appendChild(c);
             });
-        }
-
-        function scrollVault(dir) {
-            const v = document.getElementById('view-vault');
-            const amt = window.innerHeight * 0.7;
-            v.scrollBy({ top: dir === 'down' ? amt : -amt, behavior: 'smooth' });
         }
 
         function openLightbox(item) {
@@ -254,7 +259,7 @@
             document.getElementById('lb-desc').innerText = item.d;
             dl.href = item.s;
             
-            if(item.t === 'photo') content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain">`;
+            if(item.t === 'photo') content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
             else if(item.t === 'video') content.innerHTML = `<video src="${item.s}" controls class="max-h-[70vh] rounded-3xl"></video>`;
             else if(item.t === 'audio') content.innerHTML = `<audio src="${item.s}" controls class="mt-10"></audio>`;
             else { content.innerHTML = `<p class="p-10 text-xl italic">${item.d}</p>`; dl.classList.add('hidden'); }
@@ -264,6 +269,14 @@
             lb.classList.replace('hidden', 'flex');
             setTimeout(() => lb.style.opacity = '1', 10);
             lb.style.pointerEvents = 'auto';
+        }
+
+        // Büyük ekran içindeki ileri-geri fonksiyonu
+        function navLightbox(dir) {
+            currentItemIndex += dir;
+            if(currentItemIndex < 0) currentItemIndex = filteredData.length - 1;
+            if(currentItemIndex >= filteredData.length) currentItemIndex = 0;
+            openLightbox(filteredData[currentItemIndex]);
         }
 
         function closeLightbox() {
@@ -277,16 +290,23 @@
             document.getElementById('view-timer').classList.add('hidden');
             document.getElementById('view-admin').classList.add('hidden');
             document.getElementById('view-vault').classList.remove('hidden');
-            document.getElementById('vault-nav-controls').classList.remove('hidden');
             if(isAdmin) document.getElementById('adm-back').classList.remove('hidden');
             filterVault('all');
         }
 
         function closeVault() {
             document.getElementById('view-vault').classList.add('hidden');
-            document.getElementById('vault-nav-controls').classList.add('hidden');
             document.getElementById('view-admin').classList.remove('hidden');
         }
+
+        // Klavye ile geçiş desteği (Opsiyonel ama çok rahattır)
+        document.addEventListener('keydown', (e) => {
+            if(!document.getElementById('lightbox').classList.contains('hidden')) {
+                if(e.key === "ArrowRight") navLightbox(1);
+                if(e.key === "ArrowLeft") navLightbox(-1);
+                if(e.key === "Escape") closeLightbox();
+            }
+        });
     </script>
 </body>
 </html>
