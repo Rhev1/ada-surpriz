@@ -17,12 +17,11 @@
         .vault-item:hover { transform: translateY(-10px) scale(1.02); }
         #lightbox { transition: opacity 0.4s ease; }
         
-        /* Navigasyon Okları Stil */
         .nav-arrow { 
             position: absolute; top: 50%; transform: translateY(-50%); 
             background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
             width: 60px; height: 60px; border-radius: 50%; 
-            display: flex; items-center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.3s; z-index: 600;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -30,11 +29,8 @@
         .nav-left { left: 20px; }
         .nav-right { right: 20px; }
         
-        @media (max-width: 768px) {
-            .nav-arrow { width: 45px; height: 45px; }
-            .nav-left { left: 10px; }
-            .nav-right { right: 10px; }
-        }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--d) infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -53,10 +49,11 @@
         <div class="glass p-12 rounded-[4rem] max-w-sm w-full">
             <div id="ada-side" class="hidden space-y-8">
                 <h3 class="text-xl font-bold italic">Juno Kartı Tanımlanıyor...</h3>
-                <div class="nfc-track h-2 bg-white/10 rounded-full overflow-hidden"><div id="nfc-bar" class="h-full bg-green-500 w-0 transition-all"></div></div>
-                <p id="nfc-text" class="text-green-500 font-mono">10.0s</p>
+                <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div id="nfc-bar" class="h-full bg-green-500 w-0 transition-all"></div></div>
+                <p id="nfc-text" class="text-green-500 font-mono text-sm">10.0s</p>
             </div>
             <div id="admin-side" class="hidden space-y-6">
+                <h3 class="font-bold">Admin Girişi</h3>
                 <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none" placeholder="Şifre">
                 <button id="admin-enter" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">Aç</button>
             </div>
@@ -64,8 +61,11 @@
     </div>
 
     <div id="view-timer" class="fixed inset-0 z-[150] bg-black hidden flex-col items-center justify-center p-6 text-center">
-        <div class="grid grid-cols-4 gap-4 text-5xl md:text-9xl font-black italic">
-            <div><span id="d">00</span></div><div><span id="h">00</span></div><div><span id="m">00</span></div><div><span id="s" class="text-green-500">00</span></div>
+        <div class="grid grid-cols-4 gap-4 md:gap-16 text-5xl md:text-9xl font-black italic">
+            <div><span id="d">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Gün</p></div>
+            <div><span id="h">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Saat</p></div>
+            <div><span id="m">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Dak</p></div>
+            <div><span id="s" class="text-green-500">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Sn</p></div>
         </div>
         <div id="vault-btn" class="hidden mt-20"><button onclick="showVault()" class="bg-white text-black px-20 py-6 rounded-full font-black text-2xl animate-pulse">KASAYI AÇ 🎉</button></div>
     </div>
@@ -77,7 +77,6 @@
                 <div class="flex flex-wrap justify-center gap-2">
                     <button onclick="filterVault('all')" class="tab-btn active glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Tümü</button>
                     <button onclick="filterVault('photo')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Fotoğraflar</button>
-                    <button onclick="filterVault('video')" class="tab-btn glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Videolar</button>
                     <button id="adm-back" onclick="closeVault()" class="hidden bg-green-500 text-black px-6 py-2 rounded-full text-[9px] font-bold uppercase ml-4">Panele Dön</button>
                 </div>
             </header>
@@ -86,66 +85,71 @@
     </div>
 
     <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden items-center justify-center p-6 opacity-0 pointer-events-none">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 z-[700]">&times;</button>
+        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 z-[700] hover:text-white">&times;</button>
         
         <div class="nav-arrow nav-left" onclick="changeMedia(-1)">❮</div>
         <div class="nav-arrow nav-right" onclick="changeMedia(1)">❯</div>
 
         <div class="max-w-4xl w-full flex flex-col items-center">
             <div id="lb-content" class="w-full flex justify-center min-h-[300px] items-center"></div>
-            
-            <div class="glass p-8 rounded-[2rem] mt-8 w-full text-center relative">
+            <div class="glass p-8 rounded-[2rem] mt-8 w-full text-center relative border-t border-white/10">
                 <p id="lb-counter" class="text-[10px] text-green-500 font-bold tracking-[0.3em] mb-2">0 / 0</p>
                 <p id="lb-desc" class="text-gray-300 italic mb-6">Açıklama...</p>
-                <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold text-xs uppercase transition-all hover:bg-green-500 hover:text-white">
-                    📥 İNDİR
+                <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold text-xs uppercase hover:bg-green-500 hover:text-white transition-all">
+                    <span>📥 Dosyayı İndir</span>
                 </a>
             </div>
         </div>
     </div>
 
     <div id="view-admin" class="fixed inset-0 z-[400] bg-[#030303] hidden p-8 flex flex-col md:flex-row gap-8">
-        <div class="w-full md:w-80 glass p-8 rounded-[3rem] flex flex-col justify-between">
-            <h3 class="text-xs font-black text-green-500 uppercase">Admin Panel</h3>
-            <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] uppercase">Galeriyi Önizle</button>
+        <div class="w-full md:w-80 glass p-8 rounded-[3rem] flex flex-col justify-between text-center">
+            <h3 class="text-xs font-black text-green-500 uppercase tracking-widest">Admin Panel</h3>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-[9px] text-gray-500 uppercase mb-1">Giriş Sayısı</p>
+                <span id="stat-v" class="text-6xl font-light">0</span>
+            </div>
+            <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] uppercase">Önizle</button>
         </div>
-        <div class="flex-1 glass rounded-[3rem] flex items-center justify-center text-center">
-            <div id="admin-timer-display" class="text-4xl font-black italic">SİSTEM AKTİF</div>
-        </div>
+        <div class="flex-1 glass rounded-[3rem] flex items-center justify-center text-4xl font-black italic">SİSTEM HAZIR</div>
     </div>
 
     <script>
-        // Arka plan yıldızları
+        // Yıldızlar
         const sf = document.getElementById('star-field');
-        for(let i=0; i<100; i++) {
+        for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className='star';
-            s.style.cssText = `width:1px; height:1px; top:${Math.random()*100}%; left:${Math.random()*100}%; position:absolute; background:white;`;
+            const sz = Math.random()*2;
+            s.style.cssText = `width:${sz}px; height:${sz}px; top:${Math.random()*100}%; left:${Math.random()*100}%; --d:${Math.random()*3+2}s`;
             sf.appendChild(s);
         }
 
-// 1. Notları buraya eklemeye devam edebilirsin
+        // --- BURASI SENİN GÜNCELLEDİĞİN KISIM ---
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?", 
             130: "Ve şimdilik sonuncusu!",
-            136: "İşte şimdi tam olarak sonuncusu! ❤️" // 136'ya da not ekleyebilirsin
+            136: "İşte şimdi tam olarak sonuncusu! ❤️"
         };
 
         const data = [];
-        
-        // 2. Döngü sınırı fotoğraf sayınla tam eşit olmalı
+        let currentIndex = 0;
+        let currentFilteredData = [];
+
         for (let i = 1; i <= 136; i++) {
             data.push({ 
+                id: i,
                 t: 'photo', 
                 s: `medya/${i}.jpg`, 
                 d: messages[i] || "Asla unutulmayacak anılardan..." 
             });
         }
+        // ---------------------------------------
 
+        const url = new URLSearchParams(window.location.search);
+        const target = new Date("May 20, 2026 00:00:00").getTime();
 
-        // Giriş Mantığı
         document.getElementById('trigger-btn').onclick = () => {
-            const url = new URLSearchParams(window.location.search);
             document.getElementById('view-auth').classList.replace('hidden', 'flex');
             if(url.get('role') === 'ada' && url.get('key') === 'juno2026') {
                 document.getElementById('ada-side').classList.remove('hidden');
@@ -154,9 +158,9 @@
                     p += 0.1;
                     document.getElementById('nfc-bar').style.width = (p/10)*100 + "%";
                     document.getElementById('nfc-text').innerText = (10 - p).toFixed(1) + "s";
-                    if(p >= 10) { 
-                        clearInterval(inv); 
-                        document.getElementById('view-auth').style.display='none'; 
+                    if(p >= 10) {
+                        clearInterval(inv);
+                        document.getElementById('view-auth').style.display='none';
                         document.getElementById('view-entry').style.display='none';
                         document.getElementById('view-timer').classList.remove('hidden');
                         startTimer();
@@ -170,18 +174,20 @@
                 document.getElementById('view-auth').style.display='none';
                 document.getElementById('view-entry').style.display='none';
                 document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('stat-v').innerText = localStorage.getItem('ada_v') || 0;
+                startTimer();
             }
         };
 
         function startTimer() {
-            const target = new Date("May 20, 2026 00:00:00").getTime();
+            if(url.get('role') === 'ada') localStorage.setItem('ada_v', (parseInt(localStorage.getItem('ada_v') || 0) + 1));
             setInterval(() => {
                 const diff = target - new Date().getTime();
+                document.getElementById('d').innerText = Math.max(0, Math.floor(diff/86400000)).toString().padStart(2,'0');
+                document.getElementById('h').innerText = Math.max(0, Math.floor((diff%86400000)/3600000)).toString().padStart(2,'0');
+                document.getElementById('m').innerText = Math.max(0, Math.floor((diff%3600000)/60000)).toString().padStart(2,'0');
+                document.getElementById('s').innerText = Math.max(0, Math.floor((diff%60000)/1000)).toString().padStart(2,'0');
                 if(diff <= 0) document.getElementById('vault-btn').classList.remove('hidden');
-                document.getElementById('d').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
-                document.getElementById('h').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
-                document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-                document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
             }, 1000);
         }
 
@@ -193,49 +199,35 @@
             currentFilteredData.forEach((item, index) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
-                c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/150?text=Juno'">`;
+                c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300?text=Juno'">`;
                 c.onclick = () => openLightbox(index);
                 grid.appendChild(c);
             });
         }
 
-        // Navigasyonlu Lightbox
         function openLightbox(index) {
             currentIndex = index;
-            const item = currentFilteredData[currentIndex];
+            updateLightbox();
             const lb = document.getElementById('lightbox');
-            
-            updateLightboxContent(item);
-
             lb.classList.replace('hidden', 'flex');
             setTimeout(() => lb.style.opacity = '1', 10);
             lb.style.pointerEvents = 'auto';
         }
 
-        function updateLightboxContent(item) {
-            const content = document.getElementById('lb-content');
+        function updateLightbox() {
+            const item = currentFilteredData[currentIndex];
+            document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl">`;
             document.getElementById('lb-desc').innerText = item.d;
             document.getElementById('lb-counter').innerText = `${currentIndex + 1} / ${currentFilteredData.length}`;
             document.getElementById('lb-download').href = item.s;
-
-            content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain animate-in fade-in zoom-in duration-300">`;
         }
 
         function changeMedia(step) {
             currentIndex += step;
             if (currentIndex < 0) currentIndex = currentFilteredData.length - 1;
             if (currentIndex >= currentFilteredData.length) currentIndex = 0;
-            updateLightboxContent(currentFilteredData[currentIndex]);
+            updateLightbox();
         }
-
-        // Klavye desteği
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('lightbox').classList.contains('flex')) {
-                if (e.key === "ArrowRight") changeMedia(1);
-                if (e.key === "ArrowLeft") changeMedia(-1);
-                if (e.key === "Escape") closeLightbox();
-            }
-        });
 
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
@@ -256,6 +248,15 @@
             document.getElementById('view-vault').classList.add('hidden');
             document.getElementById('view-admin').classList.remove('hidden');
         }
+
+        // Klavye Desteği
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightbox').classList.contains('flex')) {
+                if (e.key === "ArrowRight") changeMedia(1);
+                if (e.key === "ArrowLeft") changeMedia(-1);
+                if (e.key === "Escape") closeLightbox();
+            }
+        });
     </script>
 </body>
 </html>
