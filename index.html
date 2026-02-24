@@ -128,11 +128,11 @@
             sf.appendChild(s);
         }
 
-        const messages = { 1: "İlk fotoğrafımız...", 130: "Ve şimdilik sonuncusu!" };
+        const messages = { 1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 130: "Ve şimdilik sonuncusu!" };
         const data = [];
         // 130 FOTOĞRAF DÖNGÜSÜ
         for (let i = 1; i <= 136; i++) {
-            data.push({ t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Bu anı asla unutulmayacak..." });
+            data.push({ t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
 
         const url = new URLSearchParams(window.location.search);
