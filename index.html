@@ -29,6 +29,36 @@
             100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
         }
 
+        /* EKLEDİĞİMİZ YILDIZ KAYMASI CSS */
+        .shooting-star {
+            position: fixed;
+            top: var(--y);
+            left: var(--x);
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 999; /* Her şeyin üstünde görünmesi için */
+            pointer-events: none;
+            box-shadow: 0 0 5px #fff, 0 0 10px #fff;
+            animation: shoot 1.5s linear;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, #fff, transparent);
+        }
+        @keyframes shoot {
+            0% { transform: rotate(var(--angle)) translateX(0); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: rotate(var(--angle)) translateX(600px); opacity: 0; }
+        }
+
         .gif-container { cursor: pointer; position: relative; transition: 0.5s; z-index: 100; }
         .gif-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0,255,150,0.3) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: 0.5s; }
         .gif-container:hover .gif-glow { opacity: 1; }
@@ -173,14 +203,39 @@
     </div>
 
     <script>
-        // Yıldız Alanı
+        // Sabit Yıldız Alanı
         const sf = document.getElementById('star-field');
         for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className='star';
             const sz = Math.random()*2;
             s.style.cssText = `width:${sz}px; height:${sz}px; top:${Math.random()*100}%; left:${Math.random()*100}%; --d:${Math.random()*3+2}s`;
             sf.appendChild(s);
-             }
+        }
+
+        // EKLEDİĞİMİZ YILDIZ KAYMASI FONKSİYONU
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            
+            // Rastgele başlangıç konumu (ekranın dışına kaçmaması için -200px)
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight / 2); 
+            const angle = 25 + Math.random() * 30; // 25-55 derece arası kayma açısı
+            
+            star.style.setProperty('--x', x + 'px');
+            star.style.setProperty('--y', y + 'px');
+            star.style.setProperty('--angle', angle + 'deg');
+            
+            document.body.appendChild(star);
+            
+            // 2 saniye sonra elementi sil
+            setTimeout(() => star.remove(), 2000);
+            
+            // Rastgele 8-11 saniye aralığında bir sonraki yıldızı oluştur
+            setTimeout(createShootingStar, 8000 + Math.random() * 3000);
+        }
+        // Sayfa açıldıktan 4 saniye sonra ilk yıldız kaysın
+        setTimeout(createShootingStar, 4000);
 
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
@@ -204,7 +259,7 @@
             19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
             20: "Emin ol en güzeli sensin bu dünyada ki.",
             21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.",  
-            25: "Ne kadar da tatlı benim sevdiğim.",
+            25: "Ne kadar de tatlı benim sevdiğim.",
             27: "Yerim o gülüşünü.",
             28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.",
             29: "Olabilecek hayallerden.",
@@ -319,7 +374,7 @@
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
         }
 
-               let currentItemIndex = 0;
+        let currentItemIndex = 0;
         let filteredData = [];
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
@@ -352,7 +407,6 @@
                 document.getElementById('nfc-text').innerText = (10 - p).toFixed(1) + "s";
                 if(p >= 10) {
                     clearInterval(inv);
-                    // İstenen Değişiklik: Kart okuma bitince "Hoşgeldin Ada" ve "Giriş" butonu gelir
                     document.getElementById('ada-title').innerText = "Hoşgeldin Ada";
                     document.getElementById('ada-nfc-ui').classList.add('hidden');
                     document.getElementById('ada-success-ui').classList.remove('hidden');
@@ -360,7 +414,6 @@
             }, 100);
         }
 
-        // Giriş butonuna tıklandığında sayaca atan fonksiyon
         function finalEntry() {
             document.getElementById('view-auth').style.display='none';
             document.getElementById('view-entry').style.display='none';
