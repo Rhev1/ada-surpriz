@@ -1,210 +1,35 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juno Vault | Rhev1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
-    <style>
+Update index.html
+e1be085
+index.html
+
+@@ -10,7 +10,7 @@
         body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
         /* Arka Plan Efektleri */
+        /* Arka Plan Efektleri Katmanları */
         #star-field { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+        
         .aurora-top { 
-            position: fixed; top: -100px; left: 0; width: 100%; height: 400px; z-index: 2; pointer-events: none; 
+
+@@ -19,7 +19,7 @@
+            left: 0; 
+            width: 100%; 
+            height: 400px; 
+            z-index: 2; /* Arka planda kalsın */
+            z-index: 10; /* Diğer ekranların arkasında kalması için düşürüldü */
+            pointer-events: none; 
             background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 150, 0.4) 0%, rgba(0, 150, 255, 0.02) 100%, transparent 100%); 
-            filter: blur(60px); animation: aurora-flow 10s ease-in-out infinite alternate;
-        }
-        @keyframes aurora-flow { 0% { transform: scaleX(1) translateX(0); opacity: 0.5; } 100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; } }
+            filter: blur(60px);
 
-        /* Ekranlar */
-        #view-auth, #view-vault, #view-timer { background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(20px); }
-
-        /* Butonlar ve Etkileşimler */
-        .gif-container { cursor: pointer; position: relative; z-index: 100; }
-        .nfc-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        #nfc-bar { width: 0%; height: 100%; background: #00ff96; box-shadow: 0 0 15px #00ff96; transition: width 0.1s linear; }
-        
-        .vault-item { transition: all 0.4s; cursor: pointer; }
-        .vault-item:hover { transform: translateY(-5px); }
-
-        /* Lightbox Navigasyon */
-        .nav-btn { background: rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; items-center; justify-content: center; transition: 0.3s; }
-        .nav-btn:hover { background: rgba(255,255,255,0.2); }
-        
-        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--d) infinite; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-    </style>
-</head>
-<body>
-
-    <div class="aurora-top"></div>
-    <div id="star-field"></div>
-
-    <div id="view-entry" class="flex flex-col items-center justify-center min-h-screen relative z-[100]">
-        <div class="bg-white text-black px-10 py-3 rounded-full font-black text-[10px] mb-12 animate-bounce tracking-widest uppercase">Juno'yu Uyandır 🐾</div>
-        <div class="gif-container" onclick="openAuth()">
-            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" class="w-72 h-72 rounded-full object-cover border-4 border-white/10 shadow-2xl">
-        </div>
-    </div>
-
-    <div id="view-timer" class="fixed inset-0 z-[150] hidden flex flex-col items-center justify-center p-6 text-center">
-        <div class="grid grid-cols-4 gap-4 md:gap-16 text-5xl md:text-9xl font-black italic">
-            <div><span id="d">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Gün</p></div>
-            <div><span id="h">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Saat</p></div>
-            <div><span id="m">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Dak</p></div>
-            <div><span id="s" class="text-green-500">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Sn</p></div>
-        </div>
-        <div id="vault-btn" class="hidden mt-20"><button onclick="showVault()" class="bg-white text-black px-20 py-6 rounded-full font-black text-2xl animate-pulse">KASAYI AÇ 🎉</button></div>
-    </div>
-
-    <div id="view-vault" class="fixed inset-0 z-[300] hidden overflow-y-auto p-8 md:p-24">
-        <div class="max-w-6xl mx-auto pb-20 relative z-10 text-center">
-            <h1 class="text-3xl font-black italic uppercase mb-16">Ada&Eyüp Archive</h1>
-            <div id="vault-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
-        </div>
-    </div>
-
-    <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden flex-col items-center justify-center p-4">
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-4xl text-white/50 hover:text-white">&times;</button>
-        
-        <div class="relative w-full max-w-5xl flex items-center justify-center gap-4">
-            <button onclick="navLightbox(-1)" class="nav-btn text-2xl hidden md:flex">❮</button>
-            
-            <div class="flex flex-col items-center w-full">
-                <div id="lb-content" class="w-full flex justify-center mb-6"></div>
-                <div class="glass p-6 rounded-[2rem] w-full text-center relative">
-                    <p id="lb-desc" class="text-gray-300 italic text-sm mb-4"></p>
-                    <a id="lb-download" download="juno-archive.jpg" href="#" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition">
-                        📥 Fotoğrafı İndir
-                    </a>
-                </div>
-            </div>
-
-            <button onclick="navLightbox(1)" class="nav-btn text-2xl hidden md:flex">❯</button>
-        </div>
-
-        <div class="flex md:hidden gap-10 mt-8">
-            <button onclick="navLightbox(-1)" class="nav-btn text-2xl">❮</button>
-            <button onclick="navLightbox(1)" class="nav-btn text-2xl">❯</button>
-        </div>
-    </div>
-
-    <div id="view-auth" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 text-center">
-        <div class="glass p-12 rounded-[4rem] max-w-sm w-full">
-            <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none mb-4" placeholder="Şifre">
-            <button onclick="checkAdmin()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">Giriş</button>
-        </div>
-    </div>
-
-    <script>
-        let currentIdx = 0;
-        const messages = { 
-            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
-            4: "Yapay zekanın gücü adına.", 5: "Sonuç olarak ada fotoğrafı.", 6: "Bu fotoğraf da çok tatlı.", 7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
-            8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.", 9: "Bunlar da yapay zeka ama efsaneler.", 10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
-            11: "Hediyeyi başka biri almıştı. (Kızgın emojisi)", 12: "Bu da...", 13: "ve yine bu da...", 14: "Abi başka bir böyle yakışan çift var mı? Sanmam.", 15: "Yine yapay zeka ama ada fotoğrafı.",
-            16: "Çok güzelsin sevgilim. Her şeyden daha fazla güzelsin.", 17: "Pek benzetememiş olsa bile yine yakışıyoruz.", 18: "Bu efekt ne yavrum.", 19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
-            20: "Emin ol en güzeli sensin bu dünyada ki.", 21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.", 25: "Ne kadar da tatlı benim sevdiğim.", 27: "Yerim o gülüşünü.",
-            28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.", 29: "Olabilecek hayallerden.", 31: "Tatilden gelinmiş o bileklik alınmış ve yanılmış hayrola MİSS TURKEY şampiyonu.",
-            32: "Gerçekten gay gibi çıkmışım.", 33: "Kullanırken bile duvar kağıdına daldığım o fotoğraf.", 34: "Benim en beğendiğim yapay zeka fotoğraflarından biri bence mükemmelll.", 
-            35: "Altın oransın sevgilim gerçekten altın oran.", 36: "Bu inşallah daha çok olabilecek hayallerden.", 37: "Bu duvar kağıdı da çok asildi bence.", 38: "Heeyt iki deli kurşun gibiyiz. Arkadaşken bile yakıştırılıyorduk.",
-            39: "Telefonun ekranından sana bakıyorum bu arada.", 40: "Çek dili içeri bakayım.", 41: "Kaç gece saatlerce izledim ben bile bilmiyorum.", 42: "Yine gay gibiyim.", 43: "Oy yerim ben bu tatlılığı.",
-            44: "Yine mükemmel çıktığımız 2 fotoğraf 1.", 45: "2.", 46: "Şu dünyada senden daha güzeli yok derken şaka yapmıyordum. Senden daha güzel kimse yok.", 
-            47: "Bu fotoğraf niye böyle kalmış bilmiyorum ama bence bu fotoğraf aşırı tatlı.", 48: "Sen bununla güzelsin ben de Ada'yı seviyorum.", 49: "Yapay zeka'nın normal hali. Yorulmuşuz tabii.",
-            50: "İki güzel yan yana.", 51: "Buralara çok yorum yapmıyorum", 52: "Çok iyi zamanlardı ama ya sevmiştim tekrar isteyebilirim.", 54: "Hangisi en tatlı yarışması mı yapıyoruz? Tabiki sen.",
-            55: "Buralarda çok iyi değil miyiz? Gerçi her zaman iyiyiz?", 58: "Dersten sıkılmış Ada Su Aydemir", 59: "Bir mat sorusu bir de poz vereyim anlarsın ya ben Ada Su'yum.", 
-            60: "Senin elinden zehir olsa yerim.", 61: "Nasıl katlanmışız, neyse.", 62: "Abi çok güzelsin yemin ederim.", 63: "Yorumsuz.", 64: "En soldaki çıtırın insta??", 
-            65: "Deniz kadar güzel, gökyüzü kadar eşsizsin.", 66: "şşşş yorum yok.", 67: "İşte ileride o çocuklarımıza göstereceğimiz net fotoğraf.", 68: "Seni terbiyesiz seni.",
-            69: "Gerçeğini çekeriz ya rahat ol.", 70: "Bu adam kim hayırdır?", 71: "Keşke o zamanlar tanışsaydık. O zaman da öpmeye doyamazdım tatlılığından.", 72: "Şuna baaak adaaaa.",
-            73: "Mükemmel anneden mükemmel annelik.", 74: "KIZA HER ŞEY YAKIŞIYOR.", 75: "Anlıklarına bitiyorum desem.", 76: "Buna da bayıldım bittim mesela.", 77: "Bu gün mükemmel bir gündü ya.", 
-            78: "O 24 saatten fotoğraflar", 79: "Bu da...", 80: "Bu da...", 81: "ve bu da.", 82: "Sana çok aşığım be kızım bakışlarımdan belli değil mi.", 83: "İğrenç çıkmışım ama fotoğrafın hikayesi güzel.",
-            84: "Bu üçlü gerçekten çok güçlü ya özledim o günleri.", 85: "Her fotoğrafta yine evrenin mükemmelliğini gösteriyorsun.", 86: "Hayrola iki prenses ne yapıyorsunuz burada.", 
-            87: "İşte seni en beğendiğim fotoğraf arada bir açıp bakıyorum yalan yok çok seviyorum seni.", 88: "Mükemmel eşim.", 89: "Kapat ağzını sinek kaçar.", 90: "Utangaç sevdiğim ya.", 
-            91: "Her iki taraf da birbirni tamamlıyor bir uyum sağlıyor bu mükemmel.", 92: "Yaptırayım mı böyle bir şey.", 93: "MANKEN YA MANKEN.", 94: "SIKILMIŞ MANKEN.", 95: "Keşke o gün seninle tanışabilseydim.",
-            96: "İleride ki evimizde olacak o üçlü yılbaşı ağacı, juno ve karım.", 97: "Burada da sıkılmış manken var.", 98: "Bu da...", 99: "BUNU DA ÇOCUKLARIMIZA GÖSTERİCEEEZ.", 
-            100: "Ah juno beni çok yormuştun o dönem.", 101: "Ama hep sıkılıyorsun ya.", 102: "Bunu da bebelerimize göstericeeez.", 103: "Köstebeeeeek, köstebeeek.", 104: "O gamzeye gömün beni.",
-            105: "Ne sıcaktan yanmıştım o gün ya.", 106: "Ah güzelim ne kadar tatlıyız ama yaa son anda tutmuştum seni.", 107: "Bunda da keşke tanışsaydık, seni tiyatroda seçerdim. Dimi?", 108: "Evden çıkarken son fotoğraf",
-            109: "Anaaaaa", 110: "Çiceğim çiceğini tutuyor. Bunu tiktok repostundan çalmadım. Senden önce bu siteyi tasarladım.", 111: "Her iki çicek aynı karede.", 112: "Bu da çiceklerim.", 113: "Çok yorgun kullanmışım.",
-            114: "Hayallerim gerçekleştii...", 115: "Geldiğimde de oynayacağız.", 116: "Bu da...", 117: "Aslında hayallerimden biri de sevdiceğim ile arabada gezmekti biliyor musun.", 118: "İki asalet örneği tek fotoğrafa sığmış.",
-            119: "Anamm sen anne ol hemenn, hemen anne ol", 120: "Ada evlensek mi ya.", 121: "Ben bir hediyeyi ancak böyle sevebilirim.", 122: "Yaaa lütfen bundanımız olsun sevgilim.", 123: "Hogwartsa gitsek beni seçer miydin acaba.",
-            124: "Valla yaparım bir sıcak çikolata.", 125: "Ya burada bile çok tatlısın sevgilim.", 126: "Hep de buna sarılıyorum görmen lazım ya.", 127: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
-            128: "Hayırdır kardeş ne bu güzellik", 129: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.", 130: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.", 131: "Şuna bak şebek.", 
-            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.", 133: "Yerim bak seni öyle durma öyle", 134: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.", 135: "Bu da...", 136: "Ve şimdilik sonuncusu!" 
-        };
-
-        const total = 136;
-        const target = new Date("March 22, 2026 12:50:00").getTime();
-
-        // Yıldızlar
-        for(let i=0; i<150; i++){
-            const s = document.createElement('div'); s.className='star';
-            const sz = Math.random()*2;
-            s.style.cssText = `width:${sz}px; height:${sz}px; top:${Math.random()*100}%; left:${Math.random()*100}%; --d:${Math.random()*3+2}s`;
-            document.getElementById('star-field').appendChild(s);
+@@ -30,7 +30,7 @@
+            100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
         }
 
-        function openAuth() { document.getElementById('view-auth').classList.replace('hidden', 'flex'); }
-        
-        function checkAdmin() {
-            if(document.getElementById('admin-pass').value === "ada seni çok seviyorum") {
-                document.getElementById('view-auth').classList.replace('flex', 'hidden');
-                document.getElementById('view-entry').classList.add('hidden');
-                document.getElementById('view-timer').classList.replace('hidden', 'flex');
-            }
-        }
+        /* YILDIZ KAYMASI */
+        /* YILDIZ KAYMASI CSS */
+        .shooting-star {
+            position: fixed;
+            top: var(--y);
 
-        function showVault() {
-            document.getElementById('view-timer').classList.add('hidden');
-            document.getElementById('view-vault').classList.remove('hidden');
-            const grid = document.getElementById('vault-grid');
-            grid.innerHTML = '';
-            for(let i=1; i<=total; i++) {
-                const item = document.createElement('div');
-                item.className = 'glass p-2 rounded-3xl vault-item aspect-square';
-                item.innerHTML = `<img src="medya/${i}.jpg" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove()">`;
-                item.onclick = () => openLightbox(i);
-                grid.appendChild(item);
-            }
-        }
-
-        function openLightbox(id) {
-            currentIdx = id;
-            const lb = document.getElementById('lightbox');
-            document.getElementById('lb-desc').innerText = messages[id] || "Seni seviyorum...";
-            document.getElementById('lb-content').innerHTML = `<img src="medya/${id}.jpg" class="max-h-[65vh] rounded-3xl object-contain shadow-2xl border border-white/10">`;
-            document.getElementById('lb-download').href = `medya/${id}.jpg`;
-            lb.classList.replace('hidden', 'flex');
-        }
-
-        function navLightbox(dir) {
-            currentIdx += dir;
-            if(currentIdx < 1) currentIdx = total;
-            if(currentIdx > total) currentIdx = 1;
-            openLightbox(currentIdx);
-        }
-
-        function closeLightbox() { document.getElementById('lightbox').classList.replace('flex', 'hidden'); }
-
-        // Klavye Kontrolü
-        document.addEventListener('keydown', (e) => {
-            if(!document.getElementById('lightbox').classList.contains('hidden')) {
-                if(e.key === "ArrowRight") navLightbox(1);
-                if(e.key === "ArrowLeft") navLightbox(-1);
-                if(e.key === "Escape") closeLightbox();
-            }
-        });
-
-        setInterval(() => {
-            const diff = target - new Date().getTime();
-            document.getElementById('d').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
-            document.getElementById('h').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
-            document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-            document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-            if(diff <= 0) document.getElementById('vault-btn').classList.remove('hidden');
-        }, 1000);
-    </script>
-</body>
-</html>
+@@ -40,7 +40,7 @@
