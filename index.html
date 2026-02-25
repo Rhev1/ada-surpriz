@@ -62,7 +62,7 @@
     <div id="view-auth" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-6 text-center">
         <div class="glass p-12 rounded-[4rem] max-w-sm w-full">
             <div id="ada-side" class="hidden space-y-8">
-                <h3 class="text-xl font-bold italic">Juno Kartı Tanımlanıyor...</h3>
+                <h3 class="text-xl font-bold italic">Ada'nın Kartı Tanımlanıyor...</h3>
                 <div class="space-y-4">
                     <div class="nfc-track"><div id="nfc-bar"></div></div>
                     <p id="nfc-text" class="text-sm font-mono text-green-500">10.0s</p>
@@ -132,7 +132,7 @@
             <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] tracking-widest uppercase">Galeriyi Önizle</button>
         </div>
         <div class="flex-1 glass rounded-[3rem] p-12 flex flex-col items-center justify-center text-center">
-            <h2 class="text-2xl font-black italic mb-2 uppercase">Hoş Geldin Patron</h2>
+            <h2 class="text-2xl font-black italic mb-2 uppercase">Hoş Geldin Eyüp</h2>
             <div class="grid grid-cols-4 gap-8 text-3xl font-black italic mt-8" id="admin-timer-display">
                 <div><span id="adm-d">00</span><p class="text-[8px] text-gray-600 mt-2">GÜN</p></div>
                 <div><span id="adm-h">00</span><p class="text-[8px] text-gray-600 mt-2">SAAT</p></div>
@@ -260,15 +260,25 @@
             114: "Hayallerim gerçekleştii...",
             115: "Geldiğimde de oynayacağız.",
             116: "Bu da...",
-            117: "Bu da...",
-            118: "Bu da...",
-            119: "Bu da...",
-            120: "Bu da...",
-            114: "Bu da...",
-
-
-
-
+            117: "Aslında hayallerimden biri de sevdiceğim ile arabada gezmekti biliyor musun.",
+            118: "İki asalet örneği tek fotoğrafa sığmış.",
+            119: "Anamm sen anne ol hemenn, hemen anne ol",
+            120: "Ada evlensek mi ya.",
+            121: "Ben bir hediyeyi ancak böyle sevebilirim.",
+            122: "Yaaa lütfen bundanımız olsun sevgilim.",
+            123: "Hogwartsa gitsek beni seçer miydin acaba.",
+            124: "Valla yaparım bir sıcak çikolata.",
+            125: "Ya burada bile çok tatlısın sevgilim.",
+            126: "Hep de buna sarılıyorum görmen lazım ya.",
+            127: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
+            128: "Hayırdır kardeş ne bu güzellik",
+            129: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
+            130: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
+            131: "Şuna bak şebek.",
+            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
+            133: "Yerim bak seni öyle durma öyle",
+            134: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
+            135: "Bu da...",
             136: "Ve şimdilik sonuncusu!" 
         };
 
@@ -284,7 +294,7 @@
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
         const key = url.get('key');
-        const target = new Date("February 24, 2026 12:50:00").getTime();
+        const target = new Date("March 22, 2026 12:50:00").getTime();
 
         window.onload = () => {
             if(role === 'ada' && key === 'juno2026') {
@@ -352,21 +362,18 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
 
-            // Akıllı Filtreleme: Mevcut olmayan dosyaları gridde göstermemek için
             const initialFiltered = type === 'all' ? data : data.filter(item => item.t === type);
-            filteredData = []; // Bu dizi openLightbox ve navigasyon için kullanılacak
+            filteredData = []; 
 
             initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
                 c.id = `item-${item.id}`;
                 
-                // Onerror eklendi: Eğer dosya bulunamazsa grid hücresini tamamen gizle
                 c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" 
                                 onerror="this.parentElement.remove();">`;
                 
                 c.onclick = () => { 
-                    // Navigasyon için tıklanan öğenin filteredData içindeki güncel yerini bul
                     currentItemIndex = filteredData.indexOf(item);
                     openLightbox(item); 
                 };
@@ -386,7 +393,6 @@
             dl.href = item.s;
             counter.innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
             
-            // Onerror eklendi: Lightbox içindeyken resim yoksa bir sonrakine atla
             content.innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" 
                                  onerror="navLightbox(1);">`;
 
