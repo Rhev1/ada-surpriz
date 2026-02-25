@@ -215,7 +215,6 @@
     </div>
 
     <script>
-        // Yıldız Alanı Oluşturma
         const sf = document.getElementById('star-field');
         for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className='star';
@@ -224,7 +223,6 @@
             sf.appendChild(s);
         }
 
-        // Yıldız Kayması Fonksiyonu
         function createShootingStar() {
             const star = document.createElement('div');
             star.className = 'shooting-star';
@@ -240,7 +238,6 @@
         }
         setTimeout(createShootingStar, 4000);
 
-        // Veri ve Mesajlar
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?",
@@ -372,16 +369,16 @@
             136: "Ve şimdilik sonuncusu!" 
         };
 
-        // DİKKAT: VİDEO OLAN DOSYALARIN NUMARASINI BURAYA YAZACAKSIN
-        // Örneğin 1.mp4, 5.mp4, 20.mp4 varsa: const videoIds = [1, 5, 20];
-        const videoIds = [1]; 
+        // 1'den 6'ya kadar olan dosyalar video olarak ayarlandı
+        const videoIds = [1, 2, 3, 4, 5, 6]; 
 
         const data = [];
         for (let i = 1; i <= 136; i++) {
             let isVideo = videoIds.includes(i);
             let type = isVideo ? 'video' : 'photo';
             let ext = isVideo ? 'mp4' : 'jpg';
-            data.push({ id: i, t: type, s: `medya/${i}.${ext}`, d: messages[i] || "Asla unutulmayacak anılardan..." });
+            // Boş olanlara varsayılan bir metin yazmaması için || "" eklendi
+            data.push({ id: i, t: type, s: `medya/${i}.${ext}`, d: messages[i] || "" });
         }
 
         let currentItemIndex = 0;
@@ -471,7 +468,6 @@
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
                 
-                // Medya video ise <video>, fotoğraf ise <img> etiketi render et
                 if(item.t === 'video') {
                     c.innerHTML = `<video src="${item.s}" class="w-full h-full object-cover rounded-2xl" autoplay muted loop playsinline></video>`;
                 } else {
@@ -489,7 +485,6 @@
             document.getElementById('lb-download').href = item.s;
             document.getElementById('lb-counter').innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
             
-            // Lightbox içinde video veya resim açılması
             if(item.t === 'video') {
                 document.getElementById('lb-content').innerHTML = `<video src="${item.s}" controls autoplay class="max-h-[70vh] rounded-3xl object-contain shadow-2xl"></video>`;
             } else {
@@ -510,7 +505,6 @@
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
             lb.style.opacity = '0'; lb.style.pointerEvents = 'none';
-            // Eğer video açıksa kapanırken videoyu durdurmak için içeriği temizliyoruz
             setTimeout(() => { 
                 lb.classList.replace('flex', 'hidden');
                 document.getElementById('lb-content').innerHTML = ''; 
