@@ -233,6 +233,13 @@
         setTimeout(createShootingStar, 4000);
 
         const messages = { 
+            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
+            2: "Duvar kağıdını hatırlıyor musun?",
+            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
+            4: "Yapay zekanın gücü adına.",
+            5: "Sonuç olarak ada fotoğrafı.",
+            6: "Bu fotoğraf da çok tatlı.",
+            7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
             8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
             9: "Bunlar da yapay zeka ama efsaneler.", 
             10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
@@ -357,12 +364,13 @@
         };
 
         const data = [];
-        const videoLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+        const videoLetters = ['a', 'b', 'c', 'd', 'e'];
         videoLetters.forEach((letter) => {
             data.push({ id: letter, t: 'video', s: `medya/${letter}.mp4`, d: "" });
         });
 
-        for (let i = 8; i <= 136; i++) {
+        // FOTOĞRAFLAR ARTIK 1'DEN BAŞLIYOR
+        for (let i = 1; i <= 136; i++) {
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "" });
         }
 
@@ -454,7 +462,6 @@
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
                 
                 if(item.t === 'video') {
-                    // Videolar galeri ekranında sessizce oynasın
                     c.innerHTML = `
                         <video src="${item.s}" autoplay muted loop playsinline preload="metadata" 
                                class="w-full h-full object-cover rounded-2xl pointer-events-none"></video>
@@ -481,7 +488,7 @@
             if(item.t === 'video') {
                 document.getElementById('lb-content').innerHTML = `<video src="${item.s}" controls autoplay class="max-h-[70vh] rounded-3xl object-contain shadow-2xl"></video>`;
                 desc.innerText = ""; 
-                footer.classList.add('border-transparent'); // Video için alt kısmı sadeleştir
+                footer.classList.add('border-transparent');
             } else {
                 document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" onerror="navLightbox(1);">`;
                 desc.innerText = item.d;
