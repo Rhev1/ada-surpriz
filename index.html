@@ -10,7 +10,6 @@
         body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Arka Plan Efektleri Katmanları */
         #star-field { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
         
         .aurora-top { 
@@ -30,7 +29,6 @@
             100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
         }
 
-        /* YILDIZ KAYMASI CSS */
         .shooting-star {
             position: fixed;
             top: var(--y);
@@ -60,11 +58,7 @@
             100% { transform: rotate(var(--angle)) translateX(600px); opacity: 0; }
         }
 
-        #view-auth { 
-            background: rgba(0, 0, 0, 0.8) !important; 
-            backdrop-filter: blur(20px); 
-        }
-
+        #view-auth { background: rgba(0, 0, 0, 0.8) !important; backdrop-filter: blur(20px); }
         .gif-container { cursor: pointer; position: relative; transition: 0.5s; z-index: 100; }
         .gif-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0,255,150,0.3) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: 0.5s; }
         .gif-container:hover .gif-glow { opacity: 1; }
@@ -182,9 +176,9 @@
         <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 hover:text-white z-[600]">&times;</button>
         <div class="max-w-4xl w-full flex flex-col items-center">
             <div id="lb-content" class="w-full flex justify-center"></div>
-            <div class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
+            <div id="lb-footer" class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
                 <div id="lb-counter" class="text-[10px] text-green-500 font-bold mb-2 tracking-widest uppercase">0 / 0</div>
-                <p id="lb-desc" class="text-gray-300 leading-relaxed italic mb-6">Yükleniyor...</p>
+                <p id="lb-desc" class="text-gray-300 leading-relaxed italic mb-6"></p>
                 <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold text-xs uppercase hover:bg-green-500 hover:text-white transition-all">
                     <span>📥 Dosyayı İndir</span>
                 </a>
@@ -239,13 +233,6 @@
         setTimeout(createShootingStar, 4000);
 
         const messages = { 
-            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
-            2: "Duvar kağıdını hatırlıyor musun?",
-            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
-            4: "Yapay zekanın gücü adına.",
-            5: "Sonuç olarak ada fotoğrafı.",
-            6: "Bu fotoğraf da çok tatlı.",
-            7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
             8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
             9: "Bunlar da yapay zeka ama efsaneler.", 
             10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
@@ -370,26 +357,13 @@
         };
 
         const data = [];
-        // Videolar a-g arası (7 adet)
         const videoLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-        videoLetters.forEach((letter, index) => {
-            data.push({ 
-                id: letter, 
-                t: 'video', 
-                s: `medya/${letter}.mp4`, 
-                p: `medya/${letter}.jpg`, // Önizleme fotoğrafı
-                d: messages[index + 1] || "" 
-            });
+        videoLetters.forEach((letter) => {
+            data.push({ id: letter, t: 'video', s: `medya/${letter}.mp4`, d: "" });
         });
 
-        // Fotoğraflar 8'den 136'ya (Çakışmaması için)
         for (let i = 8; i <= 136; i++) {
-            data.push({ 
-                id: i, 
-                t: 'photo', 
-                s: `medya/${i}.jpg`, 
-                d: messages[i] || "" 
-            });
+            data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "" });
         }
 
         let currentItemIndex = 0;
@@ -480,18 +454,12 @@
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
                 
                 if(item.t === 'video') {
-                    // Video için lazy loading + önizleme (p) desteği
+                    // Videolar galeri ekranında sessizce oynasın
                     c.innerHTML = `
-                        <div class="relative w-full h-full">
-                            <img src="${item.p}" loading="lazy" class="w-full h-full object-cover rounded-2xl" 
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="hidden absolute inset-0 flex-col items-center justify-center bg-white/5 rounded-2xl">
-                                <span class="text-2xl">🎥</span>
-                                <span class="text-[8px] font-bold opacity-50 uppercase mt-1">Video</span>
-                            </div>
-                            <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-md p-1 rounded-full">
-                                 <span class="text-[10px]">▶️</span>
-                            </div>
+                        <video src="${item.s}" autoplay muted loop playsinline preload="metadata" 
+                               class="w-full h-full object-cover rounded-2xl pointer-events-none"></video>
+                        <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-md p-1 rounded-full">
+                             <span class="text-[10px]">▶️</span>
                         </div>`;
                 } else {
                     c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
@@ -504,14 +472,20 @@
 
         function openLightbox(item) {
             const lb = document.getElementById('lightbox');
-            document.getElementById('lb-desc').innerText = item.d;
+            const desc = document.getElementById('lb-desc');
+            const footer = document.getElementById('lb-footer');
+            
             document.getElementById('lb-download').href = item.s;
             document.getElementById('lb-counter').innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
             
             if(item.t === 'video') {
                 document.getElementById('lb-content').innerHTML = `<video src="${item.s}" controls autoplay class="max-h-[70vh] rounded-3xl object-contain shadow-2xl"></video>`;
+                desc.innerText = ""; 
+                footer.classList.add('border-transparent'); // Video için alt kısmı sadeleştir
             } else {
                 document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" onerror="navLightbox(1);">`;
+                desc.innerText = item.d;
+                footer.classList.remove('border-transparent');
             }
 
             lb.classList.replace('hidden', 'flex');
