@@ -369,16 +369,27 @@
             136: "Ve şimdilik sonuncusu!" 
         };
 
-        // 1'den 6'ya kadar olan dosyalar video olarak ayarlandı
-        const videoIds = [1, 2, 3, 4, 5, 6]; 
-
         const data = [];
-        for (let i = 1; i <= 136; i++) {
-            let isVideo = videoIds.includes(i);
-            let type = isVideo ? 'video' : 'photo';
-            let ext = isVideo ? 'mp4' : 'jpg';
-            // Boş olanlara varsayılan bir metin yazmaması için || "" eklendi
-            data.push({ id: i, t: type, s: `medya/${i}.${ext}`, d: messages[i] || "" });
+        // Videolar a-g arası (7 adet)
+        const videoLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+        videoLetters.forEach((letter, index) => {
+            data.push({ 
+                id: letter, 
+                t: 'video', 
+                s: `medya/${letter}.mp4`, 
+                p: `medya/${letter}.jpg`, // Önizleme fotoğrafı
+                d: messages[index + 1] || "" 
+            });
+        });
+
+        // Fotoğraflar 8'den 136'ya (Çakışmaması için)
+        for (let i = 8; i <= 136; i++) {
+            data.push({ 
+                id: i, 
+                t: 'photo', 
+                s: `medya/${i}.jpg`, 
+                d: messages[i] || "" 
+            });
         }
 
         let currentItemIndex = 0;
@@ -466,12 +477,24 @@
             filteredData = [];
             initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
-                c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
+                c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
                 
                 if(item.t === 'video') {
-                    c.innerHTML = `<video src="${item.s}" class="w-full h-full object-cover rounded-2xl" autoplay muted loop playsinline></video>`;
+                    // Video için lazy loading + önizleme (p) desteği
+                    c.innerHTML = `
+                        <div class="relative w-full h-full">
+                            <img src="${item.p}" loading="lazy" class="w-full h-full object-cover rounded-2xl" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="hidden absolute inset-0 flex-col items-center justify-center bg-white/5 rounded-2xl">
+                                <span class="text-2xl">🎥</span>
+                                <span class="text-[8px] font-bold opacity-50 uppercase mt-1">Video</span>
+                            </div>
+                            <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-md p-1 rounded-full">
+                                 <span class="text-[10px]">▶️</span>
+                            </div>
+                        </div>`;
                 } else {
-                    c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
+                    c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
                 }
                 
                 c.onclick = () => { currentItemIndex = filteredData.indexOf(item); openLightbox(item); };
