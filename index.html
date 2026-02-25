@@ -62,10 +62,10 @@
     <div id="view-auth" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-6 text-center">
         <div class="glass p-12 rounded-[4rem] max-w-sm w-full">
             <div id="ada-side" class="hidden space-y-8">
-                <h3 class="text-xl font-bold italic">Ada'nın Kartı Tanımlanıyor...</h3>
+                <h3 id="ada-title" class="text-xl font-bold italic">Ada'nın Kartı Bekleniyor...</h3>
                 <div class="space-y-4">
                     <div class="nfc-track"><div id="nfc-bar"></div></div>
-                    <p id="nfc-text" class="text-sm font-mono text-green-500">10.0s</p>
+                    <p id="nfc-text" class="text-sm font-mono text-green-500">Lütfen Kartı Okutun</p>
                 </div>
             </div>
             <div id="admin-side" class="hidden space-y-6">
@@ -294,21 +294,35 @@
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
         const key = url.get('key');
-        const target = new Date("February 24, 2026 12:50:00").getTime();
+        const target = new Date("March 22, 2026 12:50:00").getTime();
 
         window.onload = () => {
-            if(role === 'ada' && key === 'juno2026') {
+            if(role === 'ada') {
                 document.getElementById('view-auth').classList.replace('hidden', 'flex');
                 document.getElementById('ada-side').classList.remove('hidden');
-                start10SecNFC();
+                
+                if(key === 'juno2026') {
+                    document.getElementById('ada-title').innerText = "Juno Kartı Tanımlanıyor...";
+                    start10SecNFC();
+                } else {
+                    document.getElementById('ada-title').innerText = "Ada'nın Kartı Bekleniyor...";
+                    document.getElementById('nfc-text').innerText = "Lütfen Kartı Okutun";
+                }
             }
         };
 
         document.getElementById('trigger-btn').onclick = () => {
             document.getElementById('view-auth').classList.replace('hidden', 'flex');
-            if(role === 'ada' && key === 'juno2026') {
+            
+            if(role === 'ada') {
                 document.getElementById('ada-side').classList.remove('hidden');
-                start10SecNFC();
+                if(key === 'juno2026') {
+                    document.getElementById('ada-title').innerText = "Juno Kartı Tanımlanıyor...";
+                    start10SecNFC();
+                } else {
+                    document.getElementById('ada-title').innerText = "Ada'nın Kartı Bekleniyor...";
+                    document.getElementById('nfc-text').innerText = "Lütfen Kartı Okutun";
+                }
             } else {
                 document.getElementById('admin-side').classList.remove('hidden');
             }
