@@ -12,66 +12,30 @@
         
         /* Arka Plan Efektleri */
         #star-field { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-        
         .aurora-top { 
-            position: fixed; 
-            top: -100px; 
-            left: 0; 
-            width: 100%; 
-            height: 400px; 
-            z-index: 2; 
-            pointer-events: none; 
+            position: fixed; top: -100px; left: 0; width: 100%; height: 400px; z-index: 2; pointer-events: none; 
             background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 150, 0.4) 0%, rgba(0, 150, 255, 0.02) 100%, transparent 100%); 
-            filter: blur(60px);
-            animation: aurora-flow 10s ease-in-out infinite alternate;
+            filter: blur(60px); animation: aurora-flow 10s ease-in-out infinite alternate;
         }
-        @keyframes aurora-flow {
-            0% { transform: scaleX(1) translateX(0); opacity: 0.5; }
-            100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
-        }
-
-        .shooting-star {
-            position: fixed;
-            top: var(--y);
-            left: var(--x);
-            width: 2px;
-            height: 2px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 999; 
-            pointer-events: none;
-            box-shadow: 0 0 5px #fff, 0 0 10px #fff;
-            animation: shoot 1.5s linear;
-        }
-        @keyframes shoot {
-            0% { transform: rotate(var(--angle)) translateX(0); opacity: 1; }
-            100% { transform: rotate(var(--angle)) translateX(600px); opacity: 0; }
-        }
+        @keyframes aurora-flow { 0% { transform: scaleX(1) translateX(0); opacity: 0.5; } 100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; } }
 
         /* Ekranlar */
-        #view-auth, #view-vault, #view-timer { 
-            background: rgba(0, 0, 0, 0.7) !important; 
-            backdrop-filter: blur(20px); 
-        }
+        #view-auth, #view-vault, #view-timer { background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(20px); }
 
-        .gif-container { cursor: pointer; position: relative; transition: 0.5s; z-index: 100; pointer-events: auto; }
-        .gif-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0,255,150,0.3) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: 0.5s; }
-        .gif-container:hover .gif-glow { opacity: 1; }
-        
+        /* Butonlar ve Etkileşimler */
+        .gif-container { cursor: pointer; position: relative; z-index: 100; }
         .nfc-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
         #nfc-bar { width: 0%; height: 100%; background: #00ff96; box-shadow: 0 0 15px #00ff96; transition: width 0.1s linear; }
         
-        .tab-btn { transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-        .tab-btn.active { background: white; color: black; border-color: white; }
+        .vault-item { transition: all 0.4s; cursor: pointer; }
+        .vault-item:hover { transform: translateY(-5px); }
+
+        /* Lightbox Navigasyon */
+        .nav-btn { background: rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; items-center; justify-content: center; transition: 0.3s; }
+        .nav-btn:hover { background: rgba(255,255,255,0.2); }
         
         .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--d) infinite; }
         @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        
-        .vault-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; z-index: 10; }
-        .vault-item:hover { transform: translateY(-10px) scale(1.02); }
-
-        #lightbox { transition: opacity 0.4s ease; }
     </style>
 </head>
 <body>
@@ -80,41 +44,13 @@
     <div id="star-field"></div>
 
     <div id="view-entry" class="flex flex-col items-center justify-center min-h-screen relative z-[100]">
-        <div id="entry-text" class="bg-white text-black px-10 py-3 rounded-full font-black text-[10px] mb-12 animate-bounce tracking-widest uppercase">Juno'yu Uyandır 🐾</div>
-        <div id="trigger-btn" class="gif-container" onclick="openAuth()">
-            <div class="gif-glow"></div>
-            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" 
-                 class="w-72 h-72 rounded-full object-cover border-4 border-white/10 shadow-2xl">
+        <div class="bg-white text-black px-10 py-3 rounded-full font-black text-[10px] mb-12 animate-bounce tracking-widest uppercase">Juno'yu Uyandır 🐾</div>
+        <div class="gif-container" onclick="openAuth()">
+            <img src="yeni-kedi.gif" onerror="this.src='https://media.tenor.com/On7tT9C_h_MAAAAd/kedi-bune.gif'" class="w-72 h-72 rounded-full object-cover border-4 border-white/10 shadow-2xl">
         </div>
     </div>
 
-    <div id="view-auth" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 text-center">
-        <div class="glass p-12 rounded-[4rem] max-w-sm w-full relative z-[210]">
-            <div id="ada-side" class="hidden space-y-8">
-                <div class="grid grid-cols-4 gap-2 text-xl font-black italic mb-4">
-                    <div><span id="ada-d">00</span><p class="text-[7px] text-gray-500 uppercase">Gün</p></div>
-                    <div><span id="ada-h">00</span><p class="text-[7px] text-gray-500 uppercase">Saat</p></div>
-                    <div><span id="ada-m">00</span><p class="text-[7px] text-gray-500 uppercase">Dak</p></div>
-                    <div><span id="ada-s" class="text-green-500">00</span><p class="text-[7px] text-gray-500 uppercase">Sn</p></div>
-                </div>
-                <h3 id="ada-title" class="text-xl font-bold italic">Ada'nın Kartı Bekleniyor...</h3>
-                <div id="ada-nfc-ui" class="space-y-4">
-                    <div class="nfc-track"><div id="nfc-bar"></div></div>
-                    <p id="nfc-text" class="text-sm font-mono text-green-500">Lütfen Kartı Okutun</p>
-                </div>
-                <div id="ada-success-ui" class="hidden animate-pulse">
-                    <button onclick="finalEntry()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase tracking-widest">Giriş Yap</button>
-                </div>
-            </div>
-            <div id="admin-side" class="hidden space-y-6">
-                <h3 class="font-bold">Admin Girişi</h3>
-                <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none" placeholder="Şifre">
-                <button onclick="checkAdmin()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">Sistemi Aç</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-timer" class="fixed inset-0 z-[150] hidden flex-col items-center justify-center p-6 text-center">
+    <div id="view-timer" class="fixed inset-0 z-[150] hidden flex flex-col items-center justify-center p-6 text-center">
         <div class="grid grid-cols-4 gap-4 md:gap-16 text-5xl md:text-9xl font-black italic">
             <div><span id="d">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Gün</p></div>
             <div><span id="h">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Saat</p></div>
@@ -125,314 +61,150 @@
     </div>
 
     <div id="view-vault" class="fixed inset-0 z-[300] hidden overflow-y-auto p-8 md:p-24">
-        <div class="max-w-6xl mx-auto pb-20 relative z-10">
-            <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
-                <h1 class="text-3xl font-black italic uppercase">Ada&Eyüp Archive</h1>
-                <div class="flex flex-wrap justify-center gap-2">
-                    <button onclick="filterVault('all')" class="tab-btn active glass px-6 py-2 rounded-full text-[9px] font-bold uppercase">Tümü</button>
-                    <button id="adm-back" onclick="closeVault()" class="hidden bg-green-500 text-black px-6 py-2 rounded-full text-[9px] font-bold uppercase ml-4">Panele Dön</button>
-                </div>
-            </header>
+        <div class="max-w-6xl mx-auto pb-20 relative z-10 text-center">
+            <h1 class="text-3xl font-black italic uppercase mb-16">Ada&Eyüp Archive</h1>
             <div id="vault-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
         </div>
     </div>
 
-    <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden items-center justify-center p-6 opacity-0 pointer-events-none">
-        <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 hover:text-white">&times;</button>
-        <div class="max-w-4xl w-full flex flex-col items-center">
-            <div id="lb-content" class="w-full flex justify-center"></div>
-            <div class="glass p-8 rounded-[2rem] mt-8 w-full text-center">
-                <p id="lb-desc" class="text-gray-300 italic"></p>
+    <div id="lightbox" class="fixed inset-0 z-[500] bg-black/95 hidden flex-col items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-4xl text-white/50 hover:text-white">&times;</button>
+        
+        <div class="relative w-full max-w-5xl flex items-center justify-center gap-4">
+            <button onclick="navLightbox(-1)" class="nav-btn text-2xl hidden md:flex">❮</button>
+            
+            <div class="flex flex-col items-center w-full">
+                <div id="lb-content" class="w-full flex justify-center mb-6"></div>
+                <div class="glass p-6 rounded-[2rem] w-full text-center relative">
+                    <p id="lb-desc" class="text-gray-300 italic text-sm mb-4"></p>
+                    <a id="lb-download" download="juno-archive.jpg" href="#" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition">
+                        📥 Fotoğrafı İndir
+                    </a>
+                </div>
             </div>
+
+            <button onclick="navLightbox(1)" class="nav-btn text-2xl hidden md:flex">❯</button>
+        </div>
+
+        <div class="flex md:hidden gap-10 mt-8">
+            <button onclick="navLightbox(-1)" class="nav-btn text-2xl">❮</button>
+            <button onclick="navLightbox(1)" class="nav-btn text-2xl">❯</button>
         </div>
     </div>
 
-    <div id="view-admin" class="fixed inset-0 z-[400] bg-[#030303] hidden p-8 flex flex-col md:flex-row gap-8">
-        <div class="w-full md:w-80 glass p-8 rounded-[3rem] flex flex-col justify-between">
-            <div class="space-y-6">
-                <h3 class="text-xs font-black text-green-500 uppercase tracking-widest">Admin Panel</h3>
-                <div class="glass p-6 rounded-3xl"><p class="text-[9px] text-gray-500 uppercase mb-1">Ada Giriş</p><span id="stat-v" class="text-6xl font-light">0</span></div>
-            </div>
-            <button onclick="showVault(true)" class="w-full bg-white text-black py-6 rounded-2xl font-black text-[10px] tracking-widest uppercase">Galeriyi Önizle</button>
-        </div>
-        <div class="flex-1 glass rounded-[3rem] p-12 flex flex-col items-center justify-center text-center">
-            <h2 class="text-2xl font-black italic mb-2 uppercase">Hoş Geldin Eyüp</h2>
-            <div class="grid grid-cols-4 gap-8 text-3xl font-black italic mt-8">
-                <div><span id="adm-d">00</span><p class="text-[8px] text-gray-600 mt-2">GÜN</p></div>
-                <div><span id="adm-h">00</span><p class="text-[8px] text-gray-600 mt-2">SAAT</p></div>
-                <div><span id="adm-m">00</span><p class="text-[8px] text-gray-600 mt-2">DAK</p></div>
-                <div><span id="adm-s" class="text-green-500">00</span><p class="text-[8px] text-gray-600 mt-2">SN</p></div>
-            </div>
+    <div id="view-auth" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 text-center">
+        <div class="glass p-12 rounded-[4rem] max-w-sm w-full">
+            <input type="password" id="admin-pass" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl text-center outline-none mb-4" placeholder="Şifre">
+            <button onclick="checkAdmin()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">Giriş</button>
         </div>
     </div>
 
     <script>
-        // Efektler
-        const sf = document.getElementById('star-field');
+        let currentIdx = 0;
+        const messages = { 
+            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 2: "Duvar kağıdını hatırlıyor musun?", 3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
+            4: "Yapay zekanın gücü adına.", 5: "Sonuç olarak ada fotoğrafı.", 6: "Bu fotoğraf da çok tatlı.", 7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
+            8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.", 9: "Bunlar da yapay zeka ama efsaneler.", 10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
+            11: "Hediyeyi başka biri almıştı. (Kızgın emojisi)", 12: "Bu da...", 13: "ve yine bu da...", 14: "Abi başka bir böyle yakışan çift var mı? Sanmam.", 15: "Yine yapay zeka ama ada fotoğrafı.",
+            16: "Çok güzelsin sevgilim. Her şeyden daha fazla güzelsin.", 17: "Pek benzetememiş olsa bile yine yakışıyoruz.", 18: "Bu efekt ne yavrum.", 19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
+            20: "Emin ol en güzeli sensin bu dünyada ki.", 21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.", 25: "Ne kadar da tatlı benim sevdiğim.", 27: "Yerim o gülüşünü.",
+            28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.", 29: "Olabilecek hayallerden.", 31: "Tatilden gelinmiş o bileklik alınmış ve yanılmış hayrola MİSS TURKEY şampiyonu.",
+            32: "Gerçekten gay gibi çıkmışım.", 33: "Kullanırken bile duvar kağıdına daldığım o fotoğraf.", 34: "Benim en beğendiğim yapay zeka fotoğraflarından biri bence mükemmelll.", 
+            35: "Altın oransın sevgilim gerçekten altın oran.", 36: "Bu inşallah daha çok olabilecek hayallerden.", 37: "Bu duvar kağıdı da çok asildi bence.", 38: "Heeyt iki deli kurşun gibiyiz. Arkadaşken bile yakıştırılıyorduk.",
+            39: "Telefonun ekranından sana bakıyorum bu arada.", 40: "Çek dili içeri bakayım.", 41: "Kaç gece saatlerce izledim ben bile bilmiyorum.", 42: "Yine gay gibiyim.", 43: "Oy yerim ben bu tatlılığı.",
+            44: "Yine mükemmel çıktığımız 2 fotoğraf 1.", 45: "2.", 46: "Şu dünyada senden daha güzeli yok derken şaka yapmıyordum. Senden daha güzel kimse yok.", 
+            47: "Bu fotoğraf niye böyle kalmış bilmiyorum ama bence bu fotoğraf aşırı tatlı.", 48: "Sen bununla güzelsin ben de Ada'yı seviyorum.", 49: "Yapay zeka'nın normal hali. Yorulmuşuz tabii.",
+            50: "İki güzel yan yana.", 51: "Buralara çok yorum yapmıyorum", 52: "Çok iyi zamanlardı ama ya sevmiştim tekrar isteyebilirim.", 54: "Hangisi en tatlı yarışması mı yapıyoruz? Tabiki sen.",
+            55: "Buralarda çok iyi değil miyiz? Gerçi her zaman iyiyiz?", 58: "Dersten sıkılmış Ada Su Aydemir", 59: "Bir mat sorusu bir de poz vereyim anlarsın ya ben Ada Su'yum.", 
+            60: "Senin elinden zehir olsa yerim.", 61: "Nasıl katlanmışız, neyse.", 62: "Abi çok güzelsin yemin ederim.", 63: "Yorumsuz.", 64: "En soldaki çıtırın insta??", 
+            65: "Deniz kadar güzel, gökyüzü kadar eşsizsin.", 66: "şşşş yorum yok.", 67: "İşte ileride o çocuklarımıza göstereceğimiz net fotoğraf.", 68: "Seni terbiyesiz seni.",
+            69: "Gerçeğini çekeriz ya rahat ol.", 70: "Bu adam kim hayırdır?", 71: "Keşke o zamanlar tanışsaydık. O zaman da öpmeye doyamazdım tatlılığından.", 72: "Şuna baaak adaaaa.",
+            73: "Mükemmel anneden mükemmel annelik.", 74: "KIZA HER ŞEY YAKIŞIYOR.", 75: "Anlıklarına bitiyorum desem.", 76: "Buna da bayıldım bittim mesela.", 77: "Bu gün mükemmel bir gündü ya.", 
+            78: "O 24 saatten fotoğraflar", 79: "Bu da...", 80: "Bu da...", 81: "ve bu da.", 82: "Sana çok aşığım be kızım bakışlarımdan belli değil mi.", 83: "İğrenç çıkmışım ama fotoğrafın hikayesi güzel.",
+            84: "Bu üçlü gerçekten çok güçlü ya özledim o günleri.", 85: "Her fotoğrafta yine evrenin mükemmelliğini gösteriyorsun.", 86: "Hayrola iki prenses ne yapıyorsunuz burada.", 
+            87: "İşte seni en beğendiğim fotoğraf arada bir açıp bakıyorum yalan yok çok seviyorum seni.", 88: "Mükemmel eşim.", 89: "Kapat ağzını sinek kaçar.", 90: "Utangaç sevdiğim ya.", 
+            91: "Her iki taraf da birbirni tamamlıyor bir uyum sağlıyor bu mükemmel.", 92: "Yaptırayım mı böyle bir şey.", 93: "MANKEN YA MANKEN.", 94: "SIKILMIŞ MANKEN.", 95: "Keşke o gün seninle tanışabilseydim.",
+            96: "İleride ki evimizde olacak o üçlü yılbaşı ağacı, juno ve karım.", 97: "Burada da sıkılmış manken var.", 98: "Bu da...", 99: "BUNU DA ÇOCUKLARIMIZA GÖSTERİCEEEZ.", 
+            100: "Ah juno beni çok yormuştun o dönem.", 101: "Ama hep sıkılıyorsun ya.", 102: "Bunu da bebelerimize göstericeeez.", 103: "Köstebeeeeek, köstebeeek.", 104: "O gamzeye gömün beni.",
+            105: "Ne sıcaktan yanmıştım o gün ya.", 106: "Ah güzelim ne kadar tatlıyız ama yaa son anda tutmuştum seni.", 107: "Bunda da keşke tanışsaydık, seni tiyatroda seçerdim. Dimi?", 108: "Evden çıkarken son fotoğraf",
+            109: "Anaaaaa", 110: "Çiceğim çiceğini tutuyor. Bunu tiktok repostundan çalmadım. Senden önce bu siteyi tasarladım.", 111: "Her iki çicek aynı karede.", 112: "Bu da çiceklerim.", 113: "Çok yorgun kullanmışım.",
+            114: "Hayallerim gerçekleştii...", 115: "Geldiğimde de oynayacağız.", 116: "Bu da...", 117: "Aslında hayallerimden biri de sevdiceğim ile arabada gezmekti biliyor musun.", 118: "İki asalet örneği tek fotoğrafa sığmış.",
+            119: "Anamm sen anne ol hemenn, hemen anne ol", 120: "Ada evlensek mi ya.", 121: "Ben bir hediyeyi ancak böyle sevebilirim.", 122: "Yaaa lütfen bundanımız olsun sevgilim.", 123: "Hogwartsa gitsek beni seçer miydin acaba.",
+            124: "Valla yaparım bir sıcak çikolata.", 125: "Ya burada bile çok tatlısın sevgilim.", 126: "Hep de buna sarılıyorum görmen lazım ya.", 127: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
+            128: "Hayırdır kardeş ne bu güzellik", 129: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.", 130: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.", 131: "Şuna bak şebek.", 
+            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.", 133: "Yerim bak seni öyle durma öyle", 134: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.", 135: "Bu da...", 136: "Ve şimdilik sonuncusu!" 
+        };
+
+        const total = 136;
+        const target = new Date("March 22, 2026 12:50:00").getTime();
+
+        // Yıldızlar
         for(let i=0; i<150; i++){
             const s = document.createElement('div'); s.className='star';
             const sz = Math.random()*2;
             s.style.cssText = `width:${sz}px; height:${sz}px; top:${Math.random()*100}%; left:${Math.random()*100}%; --d:${Math.random()*3+2}s`;
-            sf.appendChild(s);
+            document.getElementById('star-field').appendChild(s);
         }
 
-        function createShootingStar(){
-            const star = document.createElement('div'); star.className = 'shooting-star';
-            const x = Math.random()*(window.innerWidth-200);
-            const y = Math.random()*(window.innerHeight/2);
-            star.style.setProperty('--x', x+'px'); star.style.setProperty('--y', y+'px');
-            star.style.setProperty('--angle', (25+Math.random()*30)+'deg');
-            document.body.appendChild(star);
-            setTimeout(() => star.remove(), 2000);
-            setTimeout(createShootingStar, 8000+Math.random()*3000);
-        }
-        setTimeout(createShootingStar, 4000);
-
-        // Mesajlar Verisi
-        const messages = { 
-            1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
-            2: "Duvar kağıdını hatırlıyor musun?",
-            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
-            4: "Yapay zekanın gücü adına.",
-            5: "Sonuç olarak ada fotoğrafı.",
-            6: "Bu fotoğraf da çok tatlı.",
-            7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
-            8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
-            9: "Bunlar da yapay zeka ama efsaneler.", 
-            10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
-            11: "Hediyeyi başka biri almıştı. (Kızgın emojisi)",
-            12: "Bu da...",
-            13: "ve yine bu da...",
-            14: "Abi başka bir böyle yakışan çift var mı? Sanmam.",
-            15: "Yine yapay zeka ama ada fotoğrafı.",
-            16: "Çok güzelsin sevgilim. Her şeyden daha fazla güzelsin.",
-            17: "Pek benzetememiş olsa bile yine yakışıyoruz.",
-            18: "Bu efekt ne yavrum.",
-            19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
-            20: "Emin ol en güzeli sensin bu dünyada ki.",
-            21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.",  
-            25: "Ne kadar da tatlı benim sevdiğim.",
-            27: "Yerim o gülüşünü.",
-            28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.",
-            29: "Olabilecek hayallerden.",
-            31: "Tatilden gelinmiş o bileklik alınmış ve yanılmış hayrola MİSS TURKEY şampiyonu.",
-            32: "Gerçekten gay gibi çıkmışım.",
-            33: "Kullanırken bile duvar kağıdına daldığım o fotoğraf.",
-            34: "Benim en beğendiğim yapay zeka fotoğraflarından biri bence mükemmelll.",
-            35: "Altın oransın sevgilim gerçekten altın oran.",
-            36: "Bu inşallah daha çok olabilecek hayallerden.",
-            37: "Bu duvar kağıdı da çok asildi bence.",
-            38: "Heeyt iki deli kurşun gibiyiz. Arkadaşken bile yakıştırılıyorduk.",
-            39: "Telefonun ekranından sana bakıyorum bu arada.",
-            40: "Çek dili içeri bakayım.",
-            41: "Kaç gece saatlerce izledim ben bile bilmiyorum.",
-            42: "Yine gay gibiyim.",
-            43: "Oy yerim ben bu tatlılığı.",
-            44: "Yine mükemmel çıktığımız 2 fotoğraf 1.",
-            45: "2.",
-            46: "Şu dünyada senden daha güzeli yok derken şaka yapmıyordum. Senden daha güzel kimse yok.",
-            47: "Bu fotoğraf niye böyle kalmış bilmiyorum ama bence bu fotoğraf aşırı tatlı.",
-            48: "Sen bununla güzelsin ben de Ada'yı seviyorum.",
-            49: "Yapay zeka'nın normal hali. Yorulmuşuz tabii.",
-            50: "İki güzel yan yana.",
-            51: "Buralara çok yorum yapmıyorum",
-            52: "Çok iyi zamanlardı ama ya sevmiştim tekrar isteyebilirim.",
-            54: "Hangisi en tatlı yarışması mı yapıyoruz? Tabiki sen.",
-            55: "Buralarda çok iyi değil miyiz? Gerçi her zaman iyiyiz?",
-            58: "Dersten sıkılmış Ada Su Aydemir",
-            59: "Bir mat sorusu bir de poz vereyim anlarsın ya ben Ada Su'yum.",
-            60: "Senin elinden zehir olsa yerim.",
-            61: "Nasıl katlanmışız, neyse.",
-            62: "Abi çok güzelsin yemin ederim.",
-            63: "Yorumsuz.",
-            64: "En soldaki çıtırın insta??",
-            65: "Deniz kadar güzel, gökyüzü kadar eşsizsin.",
-            66: "şşşş yorum yok.",
-            67: "İşte ileride o çocuklarımıza göstereceğimiz net fotoğraf.",
-            68: "Seni terbiyesiz seni.",
-            69: "Gerçeğini çekeriz ya rahat ol.",
-            70: "Bu adam kim hayırdır?",
-            71: "Keşke o zamanlar tanışsaydık. O zaman da öpmeye doyamazdım tatlılığından.",
-            72: "Şuna baaak adaaaa.",
-            73: "Mükemmel anneden mükemmel annelik.",
-            74: "KIZA HER ŞEY YAKIŞIYOR.",
-            75: "Anlıklarına bitiyorum desem.",
-            76: "Buna da bayıldım bittim mesela.",
-            77: "Bu gün mükemmel bir gündü ya.",
-            78: "O 24 saatten fotoğraflar",
-            79: "Bu da...",
-            80: "Bu da...",
-            81: "ve bu da.",
-            82: "Sana çok aşığım be kızım bakışlarımdan belli değil mi.",
-            83: "İğrenç çıkmışım ama fotoğrafın hikayesi güzel.",
-            84: "Bu üçlü gerçekten çok güçlü ya özledim o günleri.",
-            85: "Her fotoğrafta yine evrenin mükemmelliğini gösteriyorsun.",
-            86: "Hayrola iki prenses ne yapıyorsunuz burada.",
-            87: "İşte seni en beğendiğim fotoğraf arada bir açıp bakıyorum yalan yok çok seviyorum seni.",
-            88: "Mükemmel eşim.",
-            89: "Kapat ağzını sinek kaçar.",
-            90: "Utangaç sevdiğim ya.",
-            91: "Her iki taraf da birbirni tamamlıyor bir uyum sağlıyor bu mükemmel.",
-            92: "Yaptırayım mı böyle bir şey.",
-            93: "MANKEN YA MANKEN.",
-            94: "SIKILMIŞ MANKEN.",
-            95: "Keşke o gün seninle tanışabilseydim.",
-            96: "İleride ki evimizde olacak o üçlü yılbaşı ağacı, juno ve karım.",
-            97: "Burada da sıkılmış manken var.",
-            98: "Bu da...",
-            99: "BUNU DA ÇOCUKLARIMIZA GÖSTERİCEEEZ.",
-            100: "Ah juno beni çok yormuştun o dönem.",
-            101: "Ama hep sıkılıyorsun ya.",
-            102: "Bunu da bebelerimize göstericeeez.",
-            103: "Köstebeeeeek, köstebeeek.",
-            104: "O gamzeye gömün beni.",
-            105: "Ne sıcaktan yanmıştım o gün ya.",
-            106: "Ah güzelim ne kadar tatlıyız ama yaa son anda tutmuştum seni.",
-            107: "Bunda da keşke tanışsaydık, seni tiyatroda seçerdim. Dimi?",
-            108: "Evden çıkarken son fotoğraf",
-            109: "Anaaaaa",
-            110: "Çiceğim çiceğini tutuyor. Bunu tiktok repostundan çalmadım. Senden önce bu siteyi tasarladım.",
-            111: "Her iki çicek aynı karede.",
-            112: "Bu da çiceklerim.",
-            113: "Çok yorgun kullanmışım.",
-            114: "Hayallerim gerçekleştii...",
-            115: "Geldiğimde de oynayacağız.",
-            116: "Bu da...",
-            117: "Aslında hayallerimden biri de sevdiceğim ile arabada gezmekti biliyor musun.",
-            118: "İki asalet örneği tek fotoğrafa sığmış.",
-            119: "Anamm sen anne ol hemenn, hemen anne ol",
-            120: "Ada evlensek mi ya.",
-            121: "Ben bir hediyeyi ancak böyle sevebilirim.",
-            122: "Yaaa lütfen bundanımız olsun sevgilim.",
-            123: "Hogwartsa gitsek beni seçer miydin acaba.",
-            124: "Valla yaparım bir sıcak çikolata.",
-            125: "Ya burada bile çok tatlısın sevgilim.",
-            126: "Hep de buna sarılıyorum görmen lazım ya.",
-            127: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
-            128: "Hayırdır kardeş ne bu güzellik",
-            129: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
-            130: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
-            131: "Şuna bak şebek.",
-            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
-            133: "Yerim bak seni öyle durma öyle",
-            134: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
-            135: "Bu da...",
-            136: "Ve şimdilik sonuncusu!" 
-        };
-
-        const data = [];
-        for (let i = 1; i <= 136; i++) {
-            data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
-        }
-
-        // Sistem Mantığı
-        const url = new URLSearchParams(window.location.search);
-        const role = url.get('role');
-        const key = url.get('key');
-        const target = new Date("March 22, 2026 12:50:00").getTime();
-
-        function openAuth(){
-            document.getElementById('view-auth').classList.replace('hidden', 'flex');
-            if(role === 'ada'){
-                document.getElementById('ada-side').classList.remove('hidden');
-                if(key === 'juno2026') startNFC();
-            } else {
-                document.getElementById('admin-side').classList.remove('hidden');
+        function openAuth() { document.getElementById('view-auth').classList.replace('hidden', 'flex'); }
+        
+        function checkAdmin() {
+            if(document.getElementById('admin-pass').value === "ada seni çok seviyorum") {
+                document.getElementById('view-auth').classList.replace('flex', 'hidden');
+                document.getElementById('view-entry').classList.add('hidden');
+                document.getElementById('view-timer').classList.replace('hidden', 'flex');
             }
         }
 
-        function startNFC(){
-            let p = 0;
-            document.getElementById('ada-title').innerText = "Kart Tanımlanıyor...";
-            const inv = setInterval(() => {
-                p += 0.1;
-                document.getElementById('nfc-bar').style.width = (p/10)*100 + "%";
-                document.getElementById('nfc-text').innerText = (10 - p).toFixed(1) + "s";
-                if(p >= 10){
-                    clearInterval(inv);
-                    document.getElementById('ada-title').innerText = "Hoş Geldin Ada";
-                    document.getElementById('ada-nfc-ui').classList.add('hidden');
-                    document.getElementById('ada-success-ui').classList.remove('hidden');
-                    localStorage.setItem('ada_v', (parseInt(localStorage.getItem('ada_v') || 0) + 1));
-                }
-            }, 100);
-        }
-
-        function checkAdmin(){
-            if(document.getElementById('admin-pass').value === "ada seni çok seviyorum"){
-                document.getElementById('view-auth').style.display='none';
-                document.getElementById('view-entry').style.display='none';
-                document.getElementById('view-admin').classList.remove('hidden');
-                document.getElementById('stat-v').innerText = localStorage.getItem('ada_v') || 0;
-            }
-        }
-
-        function startMainTimer(){
-            setInterval(() => {
-                const diff = target - new Date().getTime();
-                const d = Math.floor(diff/86400000).toString().padStart(2,'0');
-                const h = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
-                const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-                const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-                
-                ['', 'ada-', 'adm-'].forEach(p => {
-                    const el = document.getElementById(p+'d');
-                    if(el){
-                        document.getElementById(p+'d').innerText = d;
-                        document.getElementById(p+'h').innerText = h;
-                        document.getElementById(p+'m').innerText = m;
-                        document.getElementById(p+'s').innerText = s;
-                    }
-                });
-                if(diff <= 0) document.getElementById('vault-btn')?.classList.remove('hidden');
-            }, 1000);
-        }
-
-        function finalEntry(){
-            document.getElementById('view-auth').style.display='none';
-            document.getElementById('view-entry').style.display='none';
-            document.getElementById('view-timer').classList.remove('hidden');
-        }
-
-        function filterVault(type){
-            const grid = document.getElementById('vault-grid'); grid.innerHTML = '';
-            data.forEach(item => {
-                const c = document.createElement('div');
-                c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
-                c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
-                c.onclick = () => openLightbox(item);
-                grid.appendChild(c);
-            });
-        }
-
-        function openLightbox(item){
-            const lb = document.getElementById('lightbox');
-            document.getElementById('lb-desc').innerText = item.d;
-            document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain">`;
-            lb.classList.replace('hidden', 'flex');
-            setTimeout(() => lb.style.opacity = '1', 10); lb.style.pointerEvents = 'auto';
-        }
-
-        function closeLightbox(){
-            const lb = document.getElementById('lightbox');
-            lb.style.opacity = '0'; lb.style.pointerEvents = 'none';
-            setTimeout(() => lb.classList.replace('flex', 'hidden'), 400);
-        }
-
-        function showVault(isAdmin=false){
+        function showVault() {
             document.getElementById('view-timer').classList.add('hidden');
-            document.getElementById('view-admin').classList.add('hidden');
             document.getElementById('view-vault').classList.remove('hidden');
-            if(isAdmin) document.getElementById('adm-back').classList.remove('hidden');
-            filterVault('all');
+            const grid = document.getElementById('vault-grid');
+            grid.innerHTML = '';
+            for(let i=1; i<=total; i++) {
+                const item = document.createElement('div');
+                item.className = 'glass p-2 rounded-3xl vault-item aspect-square';
+                item.innerHTML = `<img src="medya/${i}.jpg" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove()">`;
+                item.onclick = () => openLightbox(i);
+                grid.appendChild(item);
+            }
         }
 
-        function closeVault(){
-            document.getElementById('view-vault').classList.add('hidden');
-            document.getElementById('view-admin').classList.remove('hidden');
+        function openLightbox(id) {
+            currentIdx = id;
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lb-desc').innerText = messages[id] || "Seni seviyorum...";
+            document.getElementById('lb-content').innerHTML = `<img src="medya/${id}.jpg" class="max-h-[65vh] rounded-3xl object-contain shadow-2xl border border-white/10">`;
+            document.getElementById('lb-download').href = `medya/${id}.jpg`;
+            lb.classList.replace('hidden', 'flex');
         }
 
-        window.onload = startMainTimer;
+        function navLightbox(dir) {
+            currentIdx += dir;
+            if(currentIdx < 1) currentIdx = total;
+            if(currentIdx > total) currentIdx = 1;
+            openLightbox(currentIdx);
+        }
+
+        function closeLightbox() { document.getElementById('lightbox').classList.replace('flex', 'hidden'); }
+
+        // Klavye Kontrolü
+        document.addEventListener('keydown', (e) => {
+            if(!document.getElementById('lightbox').classList.contains('hidden')) {
+                if(e.key === "ArrowRight") navLightbox(1);
+                if(e.key === "ArrowLeft") navLightbox(-1);
+                if(e.key === "Escape") closeLightbox();
+            }
+        });
+
+        setInterval(() => {
+            const diff = target - new Date().getTime();
+            document.getElementById('d').innerText = Math.floor(diff/86400000).toString().padStart(2,'0');
+            document.getElementById('h').innerText = Math.floor((diff%86400000)/3600000).toString().padStart(2,'0');
+            document.getElementById('m').innerText = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+            document.getElementById('s').innerText = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+            if(diff <= 0) document.getElementById('vault-btn').classList.remove('hidden');
+        }, 1000);
     </script>
 </body>
 </html>
