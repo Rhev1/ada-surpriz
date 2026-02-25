@@ -28,6 +28,37 @@
             0% { transform: scaleX(1) translateX(0); opacity: 0.5; }
             100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
         }
+}
+
+        /* YILDIZ KAYMASI CSS */
+        .shooting-star {
+            position: fixed;
+            top: var(--y);
+            left: var(--x);
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            box-shadow: 0 0 5px #fff, 0 0 10px #fff;
+            animation: shoot 1.5s linear;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, #fff, transparent);
+        }
+        @keyframes shoot {
+            0% { transform: rotate(var(--angle)) translateX(0); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: rotate(var(--angle)) translateX(600px); opacity: 0; }
+        }
 
         .gif-container { cursor: pointer; position: relative; transition: 0.5s; z-index: 100; }
         .gif-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0,255,150,0.3) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: 0.5s; }
