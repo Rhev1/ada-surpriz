@@ -232,7 +232,7 @@
         }
         setTimeout(createShootingStar, 4000);
 
-const messages = { 
+        const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?",
             3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
@@ -363,27 +363,22 @@ const messages = {
             136: "Ve şimdilik sonuncusu!"
         };
 
-        // Bu kısım fotoğrafların 1.jpg -> 1: Notu şeklinde eşleşmesini sağlar
-        const vaultData = Object.keys(messages).map(id => ({
-            id: parseInt(id),
-            type: 'photo',
-            src: `${id}.jpg`,
-            desc: messages[id]
-        }));
-
-        // Metin dosyaları için destek eklendi (1a)
-        const textIds = ['1a',];
+        // Veri Hazırlama (data dizisi)
+        let data = [];
+        // Metin dosyaları
+        const textIds = ['1a'];
         textIds.forEach((id) => {
             data.push({ id: id, t: 'text', s: `medya/${id}.txt`, d: "" });
         });
 
-        // FOTOĞRAFLAR ARTIK 1'DEN BAŞLIYOR
+        // Fotoğraflar (1-136 arası ve mesaj eşleşmesi)
         for (let i = 1; i <= 136; i++) {
             data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "" });
         }
 
         let currentItemIndex = 0;
-        let filteredData = [];
+        let filteredData = [...data]; // Başlangıçta tüm veriyi filtreli diziye ata
+        
         const url = new URLSearchParams(window.location.search);
         const role = url.get('role');
         const key = url.get('key');
@@ -394,6 +389,7 @@ const messages = {
             startMainTimer();
         };
 
+        // Gife tıklama olayı
         document.getElementById('trigger-btn').onclick = () => {
             document.getElementById('view-auth').classList.replace('hidden', 'flex');
             if(role === 'ada') {
@@ -463,8 +459,10 @@ const messages = {
             const grid = document.getElementById('vault-grid'); grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
+
             const initialFiltered = type === 'all' ? data : data.filter(item => item.t === type);
-            filteredData = [];
+            filteredData = []; // Tıklanan filtreye göre içini doldur
+
             initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
@@ -489,7 +487,6 @@ const messages = {
                         }
                     };
                 } else if(item.t === 'text') {
-                    // Metin dosyaları için galeri önizleme ikonu
                     c.innerHTML = `
                         <div class="w-full h-full flex flex-col items-center justify-center bg-white/5 rounded-2xl pointer-events-none">
                             <span class="text-4xl mb-2">📄</span>
@@ -499,8 +496,9 @@ const messages = {
                     c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
                 }
                 
+                filteredData.push(item);
                 c.onclick = () => { currentItemIndex = filteredData.indexOf(item); openLightbox(item); };
-                grid.appendChild(c); filteredData.push(item);
+                grid.appendChild(c);
             });
         }
 
@@ -517,7 +515,6 @@ const messages = {
                 desc.innerText = ""; 
                 footer.classList.add('border-transparent');
             } else if(item.t === 'text') {
-                // Tıklanan metin dosyasının açılması
                 document.getElementById('lb-content').innerHTML = `<iframe src="${item.s}" class="w-full max-w-2xl h-[60vh] bg-white rounded-3xl p-4 shadow-2xl"></iframe>`;
                 desc.innerText = item.d || "Metin Dosyası";
                 footer.classList.remove('border-transparent');
