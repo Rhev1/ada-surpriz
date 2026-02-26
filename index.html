@@ -451,7 +451,8 @@
             }, 1000);
         }
 
-        function filterVault(type) {
+
+          function filterVault(type) {
             const grid = document.getElementById('vault-grid'); grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
@@ -460,14 +461,29 @@
             initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
-                
-                if(item.t === 'video') {
+
+               if(item.t === 'video') {
+                    // Videoların otomatik başlaması (autoplay) kaldırıldı, işlemciyi yormaması için preload="metadata" eklendi
                     c.innerHTML = `
-                        <video src="${item.s}" autoplay muted loop playsinline preload="metadata" 
+                        <video src="${item.s}" muted loop playsinline preload="metadata" 
                                class="w-full h-full object-cover rounded-2xl pointer-events-none"></video>
                         <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-md p-1 rounded-full">
                              <span class="text-[10px]">▶️</span>
                         </div>`;
+                    
+                    // Sadece fareyle üzerine gelindiğinde videoyu oynatır
+                    c.onmouseenter = () => {
+                        const v = c.querySelector('video');
+                        if (v) v.play();
+                    };
+                    // Fare üzerinden çekildiğinde videoyu durdurur ve başa sarar
+                    c.onmouseleave = () => {
+                        const v = c.querySelector('video');
+                        if (v) {
+                            v.pause();
+                            v.currentTime = 0;
+                        }
+                    };
                 } else {
                     c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
                 }
