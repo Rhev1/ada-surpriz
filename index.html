@@ -345,28 +345,33 @@
             118: "İki asalet örneği tek fotoğrafa sığmış.",
             119: "Anamm sen anne ol hemenn, hemen anne ol",
             120: "Ada evlensek mi ya.",
-            121: "Ben bir hediyeyi ancak böyle sevebilirim.",
-            122: "Yaaa lütfen bundanımız olsun sevgilim.",
-            123: "Hogwartsa gitsek beni seçer miydin acaba.",
-            124: "Valla yaparım bir sıcak çikolata.",
-            125: "Ya burada bile çok tatlısın sevgilim.",
-            126: "Hep de buna sarılıyorum görmen lazım ya.",
-            127: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
-            128: "Hayırdır kardeş ne bu güzellik",
-            129: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
-            130: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
-            131: "Şuna bak şebek.",
-            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
-            133: "Yerim bak seni öyle durma öyle",
-            134: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
-            135: "Bu da...",
-            136: "Ve şimdilik sonuncusu!" 
+            127: "Ben bir hediyeyi ancak böyle sevebilirim.",
+            128: "Yaaa lütfen bundanımız olsun sevgilim.",
+            129: "Hogwartsa gitsek beni seçer miydin acaba.",
+            130: "Valla yaparım bir sıcak çikolata.",
+            131: "Ya burada bile çok tatlısın sevgilim.",
+            132: "Hep de buna sarılıyorum görmen lazım ya.",
+            133: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
+            134: "Hayırdır kardeş ne bu güzellik",
+            135: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
+            136: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
+            137: "Şuna bak şebek.",
+            138: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
+            139: "Yerim bak seni öyle durma öyle",
+            140: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
+            141: "Ve şimdilik sonuncusu!" 
         };
 
         const data = [];
         const videoLetters = ['a', 'b', 'c', 'd', 'e'];
         videoLetters.forEach((letter) => {
             data.push({ id: letter, t: 'video', s: `medya/${letter}.mp4`, d: "" });
+        });
+
+        // Metin dosyaları için destek eklendi (1a, 2a, 3a, 4a, 5a)
+        const textIds = ['1a', '2a', '3a', '4a', '5a'];
+        textIds.forEach((id) => {
+            data.push({ id: id, t: 'text', s: `medya/${id}.txt`, d: "" });
         });
 
         // FOTOĞRAFLAR ARTIK 1'DEN BAŞLIYOR
@@ -451,8 +456,7 @@
             }, 1000);
         }
 
-
-          function filterVault(type) {
+        function filterVault(type) {
             const grid = document.getElementById('vault-grid'); grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
@@ -463,7 +467,6 @@
                 c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
 
                if(item.t === 'video') {
-                    // Videoların otomatik başlaması (autoplay) kaldırıldı, işlemciyi yormaması için preload="metadata" eklendi
                     c.innerHTML = `
                         <video src="${item.s}" muted loop playsinline preload="metadata" 
                                class="w-full h-full object-cover rounded-2xl pointer-events-none"></video>
@@ -471,12 +474,10 @@
                              <span class="text-[10px]">▶️</span>
                         </div>`;
                     
-                    // Sadece fareyle üzerine gelindiğinde videoyu oynatır
                     c.onmouseenter = () => {
                         const v = c.querySelector('video');
                         if (v) v.play();
                     };
-                    // Fare üzerinden çekildiğinde videoyu durdurur ve başa sarar
                     c.onmouseleave = () => {
                         const v = c.querySelector('video');
                         if (v) {
@@ -484,6 +485,13 @@
                             v.currentTime = 0;
                         }
                     };
+                } else if(item.t === 'text') {
+                    // Metin dosyaları için galeri önizleme ikonu
+                    c.innerHTML = `
+                        <div class="w-full h-full flex flex-col items-center justify-center bg-white/5 rounded-2xl pointer-events-none">
+                            <span class="text-4xl mb-2">📄</span>
+                            <span class="text-[10px] opacity-50 uppercase font-bold">Metin ${item.id}</span>
+                        </div>`;
                 } else {
                     c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
                 }
@@ -505,6 +513,11 @@
                 document.getElementById('lb-content').innerHTML = `<video src="${item.s}" controls autoplay class="max-h-[70vh] rounded-3xl object-contain shadow-2xl"></video>`;
                 desc.innerText = ""; 
                 footer.classList.add('border-transparent');
+            } else if(item.t === 'text') {
+                // Tıklanan metin dosyasının açılması
+                document.getElementById('lb-content').innerHTML = `<iframe src="${item.s}" class="w-full max-w-2xl h-[60vh] bg-white rounded-3xl p-4 shadow-2xl"></iframe>`;
+                desc.innerText = item.d || "Metin Dosyası";
+                footer.classList.remove('border-transparent');
             } else {
                 document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" onerror="navLightbox(1);">`;
                 desc.innerText = item.d;
