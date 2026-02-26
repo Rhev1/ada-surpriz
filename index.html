@@ -232,7 +232,7 @@
         }
         setTimeout(createShootingStar, 4000);
 
-        const messages = { 
+const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
             2: "Duvar kağıdını hatırlıyor musun?",
             3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
@@ -345,31 +345,34 @@
             118: "İki asalet örneği tek fotoğrafa sığmış.",
             119: "Anamm sen anne ol hemenn, hemen anne ol",
             120: "Ada evlensek mi ya.",
-            127: "Ben bir hediyeyi ancak böyle sevebilirim.",
-            128: "Yaaa lütfen bundanımız olsun sevgilim.",
-            129: "Hogwartsa gitsek beni seçer miydin acaba.",
-            130: "Valla yaparım bir sıcak çikolata.",
-            131: "Ya burada bile çok tatlısın sevgilim.",
-            132: "Hep de buna sarılıyorum görmen lazım ya.",
-            133: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
-            134: "Hayırdır kardeş ne bu güzellik",
-            135: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
-            136: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
-            137: "Şuna bak şebek.",
-            138: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
-            139: "Yerim bak seni öyle durma öyle",
-            140: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
-            141: "Ve şimdilik sonuncusu!" 
+            121: "Ben bir hediyeyi ancak böyle sevebilirim.",
+            123: "Sakin ol kovboy...",
+            122: "Yaaa lütfen bundanımız olsun sevgilim.",
+            124: "Hogwartsa gitsek beni seçer miydin acaba.",
+            125: "Valla yaparım bir sıcak çikolata.",
+            126: "Ya burada bile çok tatlısın sevgilim.",
+            127: "Hep de buna sarılıyorum görmen lazım ya.",
+            128: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
+            129: "Hayırdır kardeş ne bu güzellik",
+            130: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
+            131: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
+            132: "Şuna bak şebek.",
+            133: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
+            134: "Yerim bak seni öyle durma öyle",
+            135: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
+            136: "Ve şimdilik sonuncusu!"
         };
 
-        const data = [];
-        const videoLetters = ['a', 'b', 'c', 'd', 'e'];
-        videoLetters.forEach((letter) => {
-            data.push({ id: letter, t: 'video', s: `medya/${letter}.mp4`, d: "" });
-        });
+        // Bu kısım fotoğrafların 1.jpg -> 1: Notu şeklinde eşleşmesini sağlar
+        const vaultData = Object.keys(messages).map(id => ({
+            id: parseInt(id),
+            type: 'photo',
+            src: `${id}.jpg`,
+            desc: messages[id]
+        }));
 
-        // Metin dosyaları için destek eklendi (1a, 2a, 3a, 4a, 5a)
-        const textIds = ['1a', '2a', '3a', '4a', '5a'];
+        // Metin dosyaları için destek eklendi (1a)
+        const textIds = ['1a',];
         textIds.forEach((id) => {
             data.push({ id: id, t: 'text', s: `medya/${id}.txt`, d: "" });
         });
