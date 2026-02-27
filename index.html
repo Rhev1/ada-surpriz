@@ -10,7 +10,6 @@
         body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Arka Plan Efektleri Katmanları */
         #star-field { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
         
         .aurora-top { 
@@ -19,7 +18,7 @@
             left: 0; 
             width: 100%; 
             height: 400px; 
-            z-index: 10; /* Diğer ekranların arkasında kalması için düşürüldü */
+            z-index: 10; 
             pointer-events: none; 
             background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 150, 0.4) 0%, rgba(0, 150, 255, 0.02) 100%, transparent 100%); 
             filter: blur(60px);
@@ -30,7 +29,6 @@
             100% { transform: scaleX(1.2) translateX(20px); opacity: 0.9; }
         }
 
-        /* YILDIZ KAYMASI CSS */
         .shooting-star {
             position: fixed;
             top: var(--y);
@@ -40,7 +38,7 @@
             background: #fff;
             border-radius: 50%;
             opacity: 0;
-            z-index: 999; /* Her zaman en üstte görünmesi için */
+            z-index: 999; 
             pointer-events: none;
             box-shadow: 0 0 5px #fff, 0 0 10px #fff;
             animation: shoot 1.5s linear;
@@ -60,12 +58,7 @@
             100% { transform: rotate(var(--angle)) translateX(600px); opacity: 0; }
         }
 
-        /* Ekranlar Arası Geçiş ve Görsellik */
-        #view-auth { 
-            background: rgba(0, 0, 0, 0.8) !important; /* Arka plan efektlerinin sızması için şeffaflaştırıldı */
-            backdrop-filter: blur(20px); 
-        }
-
+        #view-auth { background: rgba(0, 0, 0, 0.8) !important; backdrop-filter: blur(20px); }
         .gif-container { cursor: pointer; position: relative; transition: 0.5s; z-index: 100; }
         .gif-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(0,255,150,0.3) 0%, transparent 70%); border-radius: 50%; opacity: 0; transition: 0.5s; }
         .gif-container:hover .gif-glow { opacity: 1; }
@@ -150,7 +143,7 @@
         </div>
     </div>
 
-    <div id="view-timer" class="fixed inset-0 z-[150] bg-black hidden flex-col items-center justify-center p-6 text-center">
+    <div id="view-timer" class="fixed inset-0 z-[150] bg-black/60 hidden flex-col items-center justify-center p-6 text-center">
         <div class="grid grid-cols-4 gap-4 md:gap-16 text-5xl md:text-9xl font-black italic">
             <div><span id="d">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Gün</p></div>
             <div><span id="h">00</span><p class="text-[10px] text-gray-700 mt-4 uppercase">Saat</p></div>
@@ -183,9 +176,9 @@
         <button onclick="closeLightbox()" class="absolute top-8 right-8 text-4xl text-white/50 hover:text-white z-[600]">&times;</button>
         <div class="max-w-4xl w-full flex flex-col items-center">
             <div id="lb-content" class="w-full flex justify-center"></div>
-            <div class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
+            <div id="lb-footer" class="glass p-8 rounded-[2rem] mt-8 w-full border-t border-white/10 text-center relative">
                 <div id="lb-counter" class="text-[10px] text-green-500 font-bold mb-2 tracking-widest uppercase">0 / 0</div>
-                <p id="lb-desc" class="text-gray-300 leading-relaxed italic mb-6">Yükleniyor...</p>
+                <p id="lb-desc" class="text-gray-300 leading-relaxed italic mb-6"></p>
                 <a id="lb-download" href="#" download class="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold text-xs uppercase hover:bg-green-500 hover:text-white transition-all">
                     <span>📥 Dosyayı İndir</span>
                 </a>
@@ -216,7 +209,6 @@
     </div>
 
     <script>
-        // Yıldız Alanı Oluşturma
         const sf = document.getElementById('star-field');
         for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className='star';
@@ -225,7 +217,6 @@
             sf.appendChild(s);
         }
 
-        // Yıldız Kayması Fonksiyonu
         function createShootingStar() {
             const star = document.createElement('div');
             star.className = 'shooting-star';
@@ -241,18 +232,145 @@
         }
         setTimeout(createShootingStar, 4000);
 
-        // Veri ve Mesajlar
         const messages = { 
             1: "Hayvanlara sevgin, kalbimi çalan noktalar...", 
-            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.",
+            2: "Duvar kağıdını hatırlıyor musun?",
+            3: "Her ne kadar sakalsız o kadar iyi olmasam da, yakışıyormuşuz.", 
+            4: "Yapay zekanın gücü adına.",
+            5: "Sonuç olarak ada fotoğrafı.",
+            6: "Bu fotoğraf da çok tatlı.",
+            7: "Resmen birini öldürücü bakışlar, beni kalbimden vurduran.",
+            8: "Benim için yeryüzündeki her şeyi unutturan, daldığım zaman geçici hafıza kaybı yaşatan fotoğraf.",
+            9: "Bunlar da yapay zeka ama efsaneler.", 
+            10: "Ne kadar güzeliz ama kesin birileri kıskanıyordur.",
+            11: "Hediyeyi başka biri almıştı. (Kızgın emojisi)",
+            12: "Bu da...",
+            13: "ve yine bu da...",
+            14: "Abi başka bir böyle yakışan çift var mı? Sanmam.",
+            15: "Yine yapay zeka ama ada fotoğrafı.",
+            16: "Çok güzelsin sevgilim. Her şeyden daha fazla güzelsin.",
+            17: "Pek benzetememiş olsa bile yine yakışıyoruz.",
+            18: "Bu efekt ne yavrum.",
+            19: "Bu ilk yıllarımızda olan fotoğraflar gerçekten o zamanlar bile seni güzel buluyordum.",
+            20: "Emin ol en güzeli sensin bu dünyada ki.",
+            21: "2 Asil karanlığın tek fotoğrafta, bana göre parıldıyorsun.",  
+            25: "Ne kadar de tatlı benim sevdiğim.",
+            27: "Yerim o gülüşünü.",
+            28: "Ne kadar sevmesen de yemin ederim çok güzelsin. O gün de çok güzeldi.",
+            29: "Olabilecek hayallerden.",
+            31: "Tatilden gelinmiş o bileklik alınmış ve yanılmış hayrola MİSS TURKEY şampiyonu.",
+            32: "Gerçekten gay gibi çıkmışım.",
+            33: "Kullanırken bile duvar kağıdına daldığım o fotoğraf.",
+            34: "Benim en beğendiğim yapay zeka fotoğraflarından biri bence mükemmelll.",
+            35: "Altın oransın sevgilim gerçekten altın oran.",
+            36: "Bu inşallah daha çok olabilecek hayallerden.",
+            37: "Bu duvar kağıdı da çok asildi bence.",
+            38: "Heeyt iki deli kurşun gibiyiz. Arkadaşken bile yakıştırılıyorduk.",
+            39: "Telefonun ekranından sana bakıyorum bu arada.",
+            40: "Çek dili içeri bakayım.",
+            41: "Kaç gece saatlerce izledim ben bile bilmiyorum.",
+            42: "Yine gay gibiyim.",
+            43: "Oy yerim ben bu tatlılığı.",
+            44: "Yine mükemmel çıktığımız 2 fotoğraf 1.",
+            45: "2.",
+            46: "Şu dünyada senden daha güzeli yok derken şaka yapmıyordum. Senden daha güzel kimse yok.",
+            47: "Bu fotoğraf niye böyle kalmış bilmiyorum ama bence bu fotoğraf aşırı tatlı.",
+            48: "Sen bununla güzelsin ben de Ada'yı seviyorum.",
+            49: "Yapay zeka'nın normal hali. Yorulmuşuz tabii.",
+            50: "İki güzel yan yana.",
+            51: "Buralara çok yorum yapmıyorum",
+            52: "Çok iyi zamanlardı ama ya sevmiştim tekrar isteyebilirim.",
+            54: "Hangisi en tatlı yarışması mı yapıyoruz? Tabiki sen.",
+            55: "Buralarda çok iyi değil miyiz? Gerçi her zaman iyiyiz?",
+            58: "Dersten sıkılmış Ada Su Aydemir",
+            59: "Bir mat sorusu bir de poz vereyim anlarsın ya ben Ada Su'yum.",
+            60: "Senin elinden zehir olsa yerim.",
+            61: "Nasıl katlanmışız, neyse.",
+            62: "Abi çok güzelsin yemin ederim.",
+            63: "Yorumsuz.",
+            64: "En soldaki çıtırın insta??",
+            65: "Deniz kadar güzel, gökyüzü kadar eşsizsin.",
+            66: "şşşş yorum yok.",
+            67: "İşte ileride o çocuklarımıza göstereceğimiz net fotoğraf.",
+            68: "Seni terbiyesiz seni.",
+            69: "Gerçeğini çekeriz ya rahat ol.",
+            70: "Bu adam kim hayırdır?",
+            71: "Keşke o zamanlar tanışsaydık. O zaman da öpmeye doyamazdım tatlılığından.",
+            72: "Şuna baaak adaaaa.",
+            73: "Mükemmel anneden mükemmel annelik.",
+            74: "KIZA HER ŞEY YAKIŞIYOR.",
+            75: "Anlıklarına bitiyorum desem.",
+            76: "Buna da bayıldım bittim mesela.",
+            77: "Bu gün mükemmel bir gündü ya.",
+            78: "O 24 saatten fotoğraflar",
+            79: "Bu da...",
+            80: "Bu da...",
+            81: "ve bu da.",
+            82: "Sana çok aşığım be kızım bakışlarımdan belli değil mi.",
+            83: "İğrenç çıkmışım ama fotoğrafın hikayesi güzel.",
+            84: "Bu üçlü gerçekten çok güçlü ya özledim o günleri.",
+            85: "Her fotoğrafta yine evrenin mükemmelliğini gösteriyorsun.",
+            86: "Hayrola iki prenses ne yapıyorsunuz burada.",
             87: "İşte seni en beğendiğim fotoğraf arada bir açıp bakıyorum yalan yok çok seviyorum seni.",
-            132: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
-            136: "Ve şimdilik sonuncusu!" 
+            88: "Mükemmel eşim.",
+            89: "Kapat ağzını sinek kaçar.",
+            90: "Utangaç sevdiğim ya.",
+            91: "Her iki taraf da birbirni tamamlıyor bir uyum sağlıyor bu mükemmel.",
+            92: "Yaptırayım mı böyle bir şey.",
+            93: "MANKEN YA MANKEN.",
+            94: "SIKILMIŞ MANKEN.",
+            95: "Keşke o gün seninle tanışabilseydim.",
+            96: "İleride ki evimizde olacak o üçlü yılbaşı ağacı, juno ve karım.",
+            97: "Burada da sıkılmış manken var.",
+            98: "Bu da...",
+            99: "BUNU DA ÇOCUKLARIMIZA GÖSTERİCEEEZ.",
+            100: "Ah juno beni çok yormuştun o dönem.",
+            101: "Ama hep sıkılıyorsun ya.",
+            102: "Bunu da bebelerimize göstericeeez.",
+            103: "Köstebeeeeek, köstebeeek.",
+            104: "O gamzeye gömün beni.",
+            105: "Ne sıcaktan yanmıştım o gün ya.",
+            106: "Ah güzelim ne kadar tatlıyız ama yaa son anda tutmuştum seni.",
+            107: "Bunda da keşke tanışsaydık, seni tiyatroda seçerdim. Dimi?",
+            108: "Evden çıkarken son fotoğraf",
+            109: "Anaaaaa",
+            110: "Çiceğim çiceğini tutuyor. Bunu tiktok repostundan çalmadım. Senden önce bu siteyi tasarladım.",
+            111: "Her iki çicek aynı karede.",
+            112: "Bu da çiceklerim.",
+            113: "Çok yorgun kullanmışım.",
+            114: "Hayallerim gerçekleştii...",
+            115: "Geldiğimde de oynayacağız.",
+            116: "Bu da...",
+            117: "Aslında hayallerimden biri de sevdiceğim ile arabada gezmekti biliyor musun.",
+            118: "İki asalet örneği tek fotoğrafa sığmış.",
+            119: "Anamm sen anne ol hemenn, hemen anne ol",
+            120: "Ada evlensek mi ya.",
+            127: "Ben bir hediyeyi ancak böyle sevebilirim.",
+            128: "Yaaa lütfen bundanımız olsun sevgilim.",
+            129: "Hogwartsa gitsek beni seçer miydin acaba.",
+            130: "Valla yaparım bir sıcak çikolata.",
+            131: "Ya burada bile çok tatlısın sevgilim.",
+            132: "Hep de buna sarılıyorum görmen lazım ya.",
+            133: "Abi mesela şu fotoğrafın güzelliğine bir bakar mısın ya. Ömrümün güzeli...",
+            134: "Hayırdır kardeş ne bu güzellik",
+            135: "Sonsuza kadar bu Ada çakmak bende kalıcak söz.",
+            136: "Yaaa yorgunluktan gözleri şişmiş sevgilimin.",
+            137: "Şuna bak şebek.",
+            138: "Sen bu dünyada eşi benzeri olmayan türünün tek örneği mükemmel bir insansın sevgilim.",
+            139: "Yerim bak seni öyle durma öyle",
+            140: "Oh yavrum yerim seni nasıl da sıkılmış, ben olmam lazımdı dimi.",
+            141: "Ve şimdilik sonuncusu!" 
         };
 
         const data = [];
+        const videoLetters = ['a', 'b', 'c', 'd', 'e'];
+        videoLetters.forEach((letter) => {
+            data.push({ id: letter, t: 'video', s: `medya/${letter}.mp4`, d: "" });
+        });
+
+        // FOTOĞRAFLAR ARTIK 1'DEN BAŞLIYOR
         for (let i = 1; i <= 136; i++) {
-            data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "Asla unutulmayacak anılardan..." });
+            data.push({ id: i, t: 'photo', s: `medya/${i}.jpg`, d: messages[i] || "" });
         }
 
         let currentItemIndex = 0;
@@ -332,7 +450,8 @@
             }, 1000);
         }
 
-        function filterVault(type) {
+
+          function filterVault(type) {
             const grid = document.getElementById('vault-grid'); grid.innerHTML = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(event) event.target.classList.add('active');
@@ -340,8 +459,34 @@
             filteredData = [];
             initialFiltered.forEach((item) => {
                 const c = document.createElement('div');
-                c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden';
-                c.innerHTML = `<img src="${item.s}" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
+                c.className = 'glass p-2 rounded-3xl vault-item aspect-square overflow-hidden flex items-center justify-center';
+
+               if(item.t === 'video') {
+                    // Videoların otomatik başlaması (autoplay) kaldırıldı, işlemciyi yormaması için preload="metadata" eklendi
+                    c.innerHTML = `
+                        <video src="${item.s}" muted loop playsinline preload="metadata" 
+                               class="w-full h-full object-cover rounded-2xl pointer-events-none"></video>
+                        <div class="absolute top-2 right-2 bg-black/50 backdrop-blur-md p-1 rounded-full">
+                             <span class="text-[10px]">▶️</span>
+                        </div>`;
+                    
+                    // Sadece fareyle üzerine gelindiğinde videoyu oynatır
+                    c.onmouseenter = () => {
+                        const v = c.querySelector('video');
+                        if (v) v.play();
+                    };
+                    // Fare üzerinden çekildiğinde videoyu durdurur ve başa sarar
+                    c.onmouseleave = () => {
+                        const v = c.querySelector('video');
+                        if (v) {
+                            v.pause();
+                            v.currentTime = 0;
+                        }
+                    };
+                } else {
+                    c.innerHTML = `<img src="${item.s}" loading="lazy" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.remove();">`;
+                }
+                
                 c.onclick = () => { currentItemIndex = filteredData.indexOf(item); openLightbox(item); };
                 grid.appendChild(c); filteredData.push(item);
             });
@@ -349,10 +494,22 @@
 
         function openLightbox(item) {
             const lb = document.getElementById('lightbox');
-            document.getElementById('lb-desc').innerText = item.d;
+            const desc = document.getElementById('lb-desc');
+            const footer = document.getElementById('lb-footer');
+            
             document.getElementById('lb-download').href = item.s;
             document.getElementById('lb-counter').innerText = `${currentItemIndex + 1} / ${filteredData.length}`;
-            document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" onerror="navLightbox(1);">`;
+            
+            if(item.t === 'video') {
+                document.getElementById('lb-content').innerHTML = `<video src="${item.s}" controls autoplay class="max-h-[70vh] rounded-3xl object-contain shadow-2xl"></video>`;
+                desc.innerText = ""; 
+                footer.classList.add('border-transparent');
+            } else {
+                document.getElementById('lb-content').innerHTML = `<img src="${item.s}" class="max-h-[70vh] rounded-3xl object-contain shadow-2xl" onerror="navLightbox(1);">`;
+                desc.innerText = item.d;
+                footer.classList.remove('border-transparent');
+            }
+
             lb.classList.replace('hidden', 'flex');
             setTimeout(() => lb.style.opacity = '1', 10); lb.style.pointerEvents = 'auto';
         }
@@ -367,7 +524,10 @@
         function closeLightbox() {
             const lb = document.getElementById('lightbox');
             lb.style.opacity = '0'; lb.style.pointerEvents = 'none';
-            setTimeout(() => lb.classList.replace('flex', 'hidden'), 400);
+            setTimeout(() => { 
+                lb.classList.replace('flex', 'hidden');
+                document.getElementById('lb-content').innerHTML = ''; 
+            }, 400);
         }
 
         function showVault(isAdmin=false) {
